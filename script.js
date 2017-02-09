@@ -5,10 +5,14 @@ var audioCtx = new AudioContext();
 // create Oscillator and gain node
 var oscillator = audioCtx.createOscillator();
 var gainNode = audioCtx.createGain();
+var panner = audioCtx.createPanner();
+
+panner.panningModel = 'equalpower';
 
 // connect oscillator to gain node to speakers
 
-oscillator.connect(gainNode);
+oscillator.connect(panner);
+panner.connect(gainNode);
 //gainNode.connect(audioCtx.destination);
 
 // create initial theremin frequency and volumn values
@@ -53,6 +57,9 @@ function updatePage() {
 
     timeElapsed += interval;
     oscillator.frequency.value = timeElapsed / duration * maxFreq;
+
+    var x = -1.0 + (timeElapsed / duration * 2.0);
+    panner.setPosition(x, 0, 1 - Math.abs(x));
     //gainNode.gain.value = (CurY/HEIGHT) * maxVol;
 
 }
