@@ -20,10 +20,9 @@ panner.connect(gainNode);
 
 // create initial theremin frequency and volumn values
 
-var maxFreq = 9000;
+var maxFreq = 6000;
 var maxVol = 0.02;
 
-var initialFreq = 3000;
 var initialVol = 0.01;
 
 // set options for the oscillator
@@ -32,7 +31,8 @@ oscillator.type = 'sine';
 oscillator.detune.value = 100; // value in cents
 oscillator.start(0);
 
-oscillator.onended = function() {
+oscillator.onended = function()
+{
   console.log('Your tone has now stopped playing!');
 }
 
@@ -41,40 +41,32 @@ gainNode.gain.value = initialVol;
 // test canvas
 
 var canvas = document.querySelector('#canvas');
-/*var canvas = document.createElement("canvas");
-canvas.setAttribute("width", window.innerWidth);
-canvas.setAttribute("height", window.innerHeight);
-canvas.setAttribute("style", "position: absolute; x:0; y:0;");
-document.body.appendChild(canvas);*/
-
-//Then you can draw a point at (10,10) like this:
-
 var context = canvas.getContext("2d");
 context.strokeRect(0, 0, canvas.width, canvas.height);
 
-var interval = 40;
+var interval = 20;
 var timeElapsed = 0;
 var duration = 3000;
 
 var rectsize = 8;
 var rectsizehalf = rectsize / 2.0;
 
-function updatePage() {
-    KeyFlag = false;
-
+function updatePage()
+{
     timeElapsed += interval;
     oscillator.frequency.value = timeElapsed / duration * maxFreq;
-//    oscillator.frequency.value = frequencyCalc(0, 3000, timeElapsed);
+    // frequency
+    oscillator.frequency.value = Math.sin(timeElapsed / duration * Math.PI) * maxFreq;
 
+    // panning
     var x = -1.0 + (timeElapsed / duration * 2.0);
     panner.setPosition(x, 0, 1 - Math.abs(x));
-    context.clearRect(0, 0, canvas.width, canvas.height);
 
+
+    // Update canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
     var posX = timeElapsed / duration * canvas.width;
     var posY = canvas.height - (oscillator.frequency.value / maxFreq * canvas.height);
-//    var posY = canvas.height - (oscillator.frequency.value / duration * canvas.height);
-//    var posY = canvas.height - (timeElapsed / duration * canvas.height);
-
     context.fillRect(posX - rectsizehalf, posY - rectsizehalf, rectsize, rectsize);
     context.strokeRect(0, 0, canvas.width, canvas.height);
 }
@@ -91,13 +83,13 @@ stopSound = function()
     launch.disabled = false;
     launch.checked = false;
     launch.hovered = false;
+    // Stop timer
     window.clearInterval(intervalTimer);
-    oscillator.frequency.value = 0;
+    updatePage();
 }
 
 launchOnClick = function() 
 {
-  //alert("click");
   if (launch.getAttribute('playing') === 'false')
   {
     gainNode.connect(audioCtx.destination);
@@ -121,9 +113,7 @@ radioOnClick = function()
     for (var i = 0, length = radio.length; i < length; i++) {
         if (radio[i].checked)
         {
-            // do whatever you want with the checked radio
             oscillator.type = radio[i].value;
-            //alert(oscillator.type);
             // only one radio can be logically checked, don't check the rest
             break;
         }
