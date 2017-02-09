@@ -124,3 +124,16 @@ radioOnClick = function()
 }
 
 radio.onclick = radioOnClick;
+
+frequencyCalc = function(min, max, current)
+{
+    var total = max - min;
+    var equivalence = total / 48;
+    current = (current - min);
+    current = (current / equivalence) - 21;
+    return (440 * Math.pow(2, (current/12)));
+}
+
+//var wind = document.getElementById('test');
+//wind.onclick = frequencyCalc(0, 1000, 0);
+
