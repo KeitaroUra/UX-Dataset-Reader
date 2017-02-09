@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <link href="style.css" rel="stylesheet" type="text/css">
-    <title>Bonjour</title>
+  <meta charset="utf-8" />
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <title>Bonjour</title>
 </head>
 
 <body>
-  <p>
-     <button id="launch" playing="false">Launch</button>
- </p>
- <p>
-     <form id = "oscillatorType">
-      <input type="radio" name="gender" value="sine" checked> Sine<br>
-      <input type="radio" name="gender" value="square"> Square<br>
-      <input type="radio" name="gender" value="sawtooth"> Sawtooth<br>
-      <input type="radio" name="gender" value="triangle"> Triangle
+  <h1>Dataset Audio</h1>
+  <div style="text-align:center;">
+   <button id="launch" playing="false">Launch</button>
+
+   <h2>Sound Type</h2>
+   <form id = "oscillatorType">
+    <input type="radio" name="gender" value="sine" checked> Sine<br>
+    <input type="radio" name="gender" value="square"> Square<br>
+    <input type="radio" name="gender" value="sawtooth"> Sawtooth<br>
+    <input type="radio" name="gender" value="triangle"> Triangle
   </form>
-</p>
-<p>Texte</p>
+
+  <h2>Display</h2>
+  <canvas id="canvas" width="640" height="360">
+    <p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p>
+  </canvas>
+</div>
 <script type="text/javascript" src="script.js"></script>
 
 <script src="./papaparse.min.js"></script>
-<script src="./jquery-3.1.1.min.js"></script>
+<script src="./jquery-2.1.1.min.js"></script>
 <script>
-console.log("Entering function");
   var data;
 
   function handleFileSelect(evt) {
@@ -36,17 +40,15 @@ console.log("Entering function");
       complete: function(results) {
         data = results;
         console.log(data);
-    }
-});
-}
+      }
+    });
+  }
 
-$(document).ready(function(){
+  $(document).ready(function(){
     $("#csv-file").change(handleFileSelect);
-});
+  });
 </script>
 <input type="file" id="csv-file" name="files"/>
 
 </body>
 </html>
-
-

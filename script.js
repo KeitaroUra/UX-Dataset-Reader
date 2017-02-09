@@ -13,14 +13,10 @@ panner.panningModel = 'equalpower';
 
 oscillator.connect(panner);
 panner.connect(gainNode);
-//gainNode.connect(audioCtx.destination);
 
 // create initial theremin frequency and volumn values
 
-var WIDTH = window.innerWidth;
-var HEIGHT = window.innerHeight;
-
-var maxFreq = 6000;
+var maxFreq = 9000;
 var maxVol = 0.02;
 
 var initialFreq = 3000;
@@ -38,19 +34,26 @@ oscillator.onended = function() {
 
 gainNode.gain.value = initialVol;
 
-// Mouse pointer coordinates
+// test canvas
 
-var CurX;
-var CurY;
+var canvas = document.querySelector('#canvas');
+/*var canvas = document.createElement("canvas");
+canvas.setAttribute("width", window.innerWidth);
+canvas.setAttribute("height", window.innerHeight);
+canvas.setAttribute("style", "position: absolute; x:0; y:0;");
+document.body.appendChild(canvas);*/
 
-// Get new mouse pointer coordinates when mouse is moved
-// then set new gain and pitch values
+//Then you can draw a point at (10,10) like this:
 
-//document.onmousemove = updatePage;
+var context = canvas.getContext("2d");
+context.strokeRect(0, 0, canvas.width, canvas.height);
 
-interval = 40;
-timeElapsed = 0;
-duration = 3000;
+var interval = 40;
+var timeElapsed = 0;
+var duration = 3000;
+
+var rectsize = 8;
+var rectsizehalf = rectsize / 2.0;
 
 function updatePage() {
     KeyFlag = false;
@@ -60,8 +63,13 @@ function updatePage() {
 
     var x = -1.0 + (timeElapsed / duration * 2.0);
     panner.setPosition(x, 0, 1 - Math.abs(x));
-    //gainNode.gain.value = (CurY/HEIGHT) * maxVol;
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
+    var posX = timeElapsed / duration * canvas.width;
+    var posY = canvas.height - (oscillator.frequency.value / maxFreq * canvas.height);
+
+    context.fillRect(posX - rectsizehalf, posY - rectsizehalf, rectsize, rectsize);
+    context.strokeRect(0, 0, canvas.width, canvas.height);
 }
 
 // launch button
@@ -73,7 +81,9 @@ stopSound = function()
     gainNode.disconnect(audioCtx.destination);
     launch.setAttribute('playing', 'false');
     launch.innerHTML = "Launch";
+    launch.disabled = false;
     launch.checked = false;
+    launch.hovered = false;
     window.clearInterval(intervalTimer);
     oscillator.frequency.value = 0;
 }
@@ -86,8 +96,10 @@ launchOnClick = function()
     gainNode.connect(audioCtx.destination);
     launch.setAttribute('playing', 'true');
     launch.innerHTML = "Playing";
+    launch.disabled = true;
     timeElapsed = 0;
     setTimeout(stopSound, duration)
+    updatePage();
     intervalTimer = setInterval(updatePage, interval);
   }
 }
