@@ -9,6 +9,10 @@ var panner = audioCtx.createPanner();
 
 panner.panningModel = 'equalpower';
 
+var minimumNote = -21;
+var maximumNote = 27;
+var differenceNote = maximumNote - minimumNote;
+
 // connect oscillator to gain node to speakers
 
 oscillator.connect(panner);
@@ -60,6 +64,7 @@ function updatePage() {
 
     timeElapsed += interval;
     oscillator.frequency.value = timeElapsed / duration * maxFreq;
+//    oscillator.frequency.value = frequencyCalc(0, 3000, timeElapsed);
 
     var x = -1.0 + (timeElapsed / duration * 2.0);
     panner.setPosition(x, 0, 1 - Math.abs(x));
@@ -67,6 +72,8 @@ function updatePage() {
 
     var posX = timeElapsed / duration * canvas.width;
     var posY = canvas.height - (oscillator.frequency.value / maxFreq * canvas.height);
+//    var posY = canvas.height - (oscillator.frequency.value / duration * canvas.height);
+//    var posY = canvas.height - (timeElapsed / duration * canvas.height);
 
     context.fillRect(posX - rectsizehalf, posY - rectsizehalf, rectsize, rectsize);
     context.strokeRect(0, 0, canvas.width, canvas.height);
@@ -128,9 +135,9 @@ radio.onclick = radioOnClick;
 frequencyCalc = function(min, max, current)
 {
     var total = max - min;
-    var equivalence = total / 48;
+    var equivalence = total / differenceNote;
     current = (current - min);
-    current = (current / equivalence) - 21;
+    current = (current / equivalence) + minimumNote;
     return (440 * Math.pow(2, (current/12)));
 }
 
