@@ -1,3 +1,7 @@
+var array;
+
+// Sound API
+
 // create web audio api context
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioCtx = new AudioContext();
@@ -20,10 +24,10 @@ panner.connect(gainNode);
 
 // create initial theremin frequency and volumn values
 
-var maxFreq = 6000;
+var maxFreq = 7000;
 var maxVol = 0.02;
 
-var initialVol = 0.01;
+var initialVol = 0.02;
 
 // set options for the oscillator
 
@@ -44,48 +48,91 @@ var canvas = document.querySelector('#canvas');
 var context = canvas.getContext("2d");
 context.strokeRect(0, 0, canvas.width, canvas.height);
 
-var interval = 20;
+var interval = 140;
 var timeElapsed = 0;
-var duration = 3000;
+var index = 0;
+var MaxIndex = 0;
+var maxValue = 0;
+var field = 'Distance (km)';
 
 var rectsize = 8;
 var rectsizehalf = rectsize / 2.0;
 
-function updatePage()
+var yFactor;
+var xFactor;
+var intervalTimer;
+
+function launchSound()
 {
+  timeElapsed = 0;
+  index = 0;
+  MaxIndex = array.data.length;
+  maxValue = 0;
+  for (var i = 0; i < MaxIndex; i++)
+  {
+    if (maxValue < array.data[i][field])
+      maxValue = array.data[i][field];
+  }
+
+  xFactor = 0;
+  yFactor = 0;
+  updatePage();
+  intervalTimer = setInterval(nextValue, interval);
+}
+
+function nextValue()
+{
+  if (index < MaxIndex && array.data[index][field])
+  {
     timeElapsed += interval;
-    oscillator.frequency.value = timeElapsed / duration * maxFreq;
+
+    yFactor = array.data[index][field] / maxValue;
+    xFactor = index / MaxIndex;
+    
     // frequency
-    oscillator.frequency.value = Math.sin(timeElapsed / duration * Math.PI) * maxFreq;
+    oscillator.frequency.value = yFactor * maxFreq;
 
     // panning
-    var x = -1.0 + (timeElapsed / duration * 2.0);
+    var x = -1.0 + (xFactor * 2.0);
     panner.setPosition(x, 0, 1 - Math.abs(x));
 
+    updatePage();
 
+    index++;
+  }
+  else
+  {
+    // Stop timer
+    window.clearInterval(intervalTimer);
+    stopSound();
+    updatePage();
+    return false;
+  }
+}
+
+function updatePage()
+{
     // Update canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
-    var posX = timeElapsed / duration * canvas.width;
-    var posY = canvas.height - (oscillator.frequency.value / maxFreq * canvas.height);
+    var posX = xFactor * canvas.width;
+    var posY = canvas.height - (yFactor * canvas.height);
     context.fillRect(posX - rectsizehalf, posY - rectsizehalf, rectsize, rectsize);
     context.strokeRect(0, 0, canvas.width, canvas.height);
 }
 
 // launch button
 var launch = document.getElementById('launch');
-var intervalTimer;
+launch.disabled = true;
 
 stopSound = function()
 {
-    gainNode.disconnect(audioCtx.destination);
-    launch.setAttribute('playing', 'false');
-    launch.innerHTML = "Launch";
-    launch.disabled = false;
-    launch.checked = false;
-    launch.hovered = false;
-    // Stop timer
-    window.clearInterval(intervalTimer);
-    updatePage();
+  gainNode.disconnect(audioCtx.destination);
+  launch.setAttribute('playing', 'false');
+  launch.innerHTML = "Launch";
+  launch.disabled = false;
+  launch.checked = false;
+  launch.hovered = false;
+
 }
 
 launchOnClick = function() 
@@ -96,10 +143,8 @@ launchOnClick = function()
     launch.setAttribute('playing', 'true');
     launch.innerHTML = "Playing";
     launch.disabled = true;
-    timeElapsed = 0;
-    setTimeout(stopSound, duration)
-    updatePage();
-    intervalTimer = setInterval(updatePage, interval);
+
+    launchSound();
   }
 }
 
@@ -110,17 +155,41 @@ var radio = document.getElementById('oscillatorType')
 
 radioOnClick = function() 
 {
-    for (var i = 0, length = radio.length; i < length; i++) {
-        if (radio[i].checked)
-        {
-            oscillator.type = radio[i].value;
+  for (var i = 0, length = radio.length; i < length; i++)
+  {
+    if (radio[i].checked)
+    {
+      oscillator.type = radio[i].value;
             // only one radio can be logically checked, don't check the rest
             break;
-        }
     }
+  }
 }
 
 radio.onclick = radioOnClick;
+
+// PARSING
+
+function handleFileSelect(evt)
+{
+  var file = evt.target.files[0];
+
+  Papa.parse(file, {
+    header: true,
+    dynamicTyping: true,
+    complete: function(results)
+    {
+      array = results;
+      console.log(array);
+      launch.disabled = false;
+    }
+  });
+}
+
+$(document).ready(function(){
+  $("#csv-file").change(handleFileSelect);
+});
+
 
 frequencyCalc = function(min, max, current)
 {
@@ -133,4 +202,5 @@ frequencyCalc = function(min, max, current)
 
 //var wind = document.getElementById('test');
 //wind.onclick = frequencyCalc(0, 1000, 0);
+
 
