@@ -7,18 +7,23 @@
     </head>
 
     <body>
-    		<p>
+    		<h1>Dataset Audio</h1>
+    		<div style="text-align:center;">
     			<button id="launch" playing="false">Launch</button>
-    		</p>
-    		<p>
+	    		
+	    		<h2>Sound Type</h2>
 	    		<form id = "oscillatorType">
 						<input type="radio" name="gender" value="sine" checked> Sine<br>
 						<input type="radio" name="gender" value="square"> Square<br>
 						<input type="radio" name="gender" value="sawtooth"> Sawtooth<br>
 						<input type="radio" name="gender" value="triangle"> Triangle
 				</form>
-			</p>
-    		<p>Texte</p>
+				
+	    		<h2>Display</h2>
+	    		<canvas id="canvas" width="640" height="360">
+				    <p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p>
+				</canvas>
+			</div>
         <script type="text/javascript" src="script.js"></script>
     </body>
 </html>
