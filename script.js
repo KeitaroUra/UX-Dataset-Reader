@@ -59,6 +59,7 @@ function updatePage() {
 
 // launch button
 var launch = document.getElementById('launch');
+var intervalTimer;
 
 stopSound = function()
 {
@@ -66,6 +67,8 @@ stopSound = function()
     launch.setAttribute('playing', 'false');
     launch.innerHTML = "Launch";
     launch.checked = false;
+    window.clearInterval(intervalTimer);
+    oscillator.frequency.value = 0;
 }
 
 launchOnClick = function() 
@@ -78,7 +81,7 @@ launchOnClick = function()
     launch.innerHTML = "Playing";
     timeElapsed = 0;
     setTimeout(stopSound, duration)
-    setInterval(updatePage, interval);
+    intervalTimer = setInterval(updatePage, interval);
   }
 }
 
