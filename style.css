@@ -1,0 +1,67 @@
+html {
+  font-size: 10px;
+  height: 100%;
+}
+
+body {
+	width: 100%;
+	height: inherit;
+}
+
+canvas {
+  display: block;
+}
+
+/* header styling */
+
+h1 {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+  font-size: 3rem;
+  margin: 0;
+  color: white;
+  text-shadow: 0 0 10px rgba(0,0,0,0.3) ;
+}
+
+/* button styling */
+
+button {
+    background-color: #0088cc;
+    background-image: linear-gradient(to bottom,  #0088cc 0%,#0055cc 100%); 
+    text-shadow: 1px 1px 1px black;  
+    text-align: center;
+    color: white;
+    border: none;
+    width: 100px;
+    font-size: 1.6rem; 
+    line-height: 2rem;
+    padding: .5rem; 
+    display: block;
+    opacity: 1.0;
+    
+    transition: 1s all;
+    -webkit-transition: 1s all;
+
+    position: absolute;
+}
+
+button:hover, button:focus {
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.7);
+    background-image: linear-gradient(to bottom,  #cc8800 0%,#cc5500 100%); 
+}
+
+button:active {
+  box-shadow: inset 2px 2px 3px rgba(0,0,0,0.7);
+    background-image: linear-gradient(to bottom,  #cccc00 0%,#ccaa00 100%); 
+}
+
+#activated {
+  background-color: red;
+  color: white;
+}
+
+#launch {
+  top: 50px;
+  left: 250px;
+}
