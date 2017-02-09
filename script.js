@@ -20,7 +20,7 @@ var maxFreq = 6000;
 var maxVol = 0.02;
 
 var initialFreq = 3000;
-var initialVol = 0.001;
+var initialVol = 0.01;
 
 // set options for the oscillator
 
@@ -42,10 +42,9 @@ var CurY;
 // Get new mouse pointer coordinates when mouse is moved
 // then set new gain and pitch values
 
-document.onmousemove = updatePage;
+//document.onmousemove = updatePage;
 
 interval = 40;
-//setInterval(updatePage, interval);
 timeElapsed = 0;
 duration = 3000;
 
@@ -59,27 +58,30 @@ function updatePage() {
 }
 
 // launch button
+var launch = document.getElementById('launch');
 
 stopSound = function()
 {
     gainNode.disconnect(audioCtx.destination);
     launch.setAttribute('playing', 'false');
     launch.innerHTML = "Launch";
+    launch.checked = false;
 }
 
 launchOnClick = function() 
 {
-  alert("click");
+  //alert("click");
   if (launch.getAttribute('playing') === 'false')
   {
     gainNode.connect(audioCtx.destination);
     launch.setAttribute('playing', 'true');
     launch.innerHTML = "Playing";
+    timeElapsed = 0;
     setTimeout(stopSound, duration)
+    setInterval(updatePage, interval);
   }
 }
 
-var launch = document.getElementById('launch');
 launch.addEventListener("click", launchOnClick)
 
 // Radio
@@ -92,7 +94,7 @@ radioOnClick = function()
         {
             // do whatever you want with the checked radio
             oscillator.type = radio[i].value;
-            alert(oscillator.type);
+            //alert(oscillator.type);
             // only one radio can be logically checked, don't check the rest
             break;
         }
