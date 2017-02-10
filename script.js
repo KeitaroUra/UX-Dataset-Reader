@@ -54,6 +54,7 @@ var timeElapsed = 0;
 var index = 0;
 var maxIndex = 0;
 var maxValue = 0;
+var minValue = 0;
 var fieldIndex = 0;
 var field = '';
 var paused = false;
@@ -78,6 +79,7 @@ function isFloat(n)
 function getFieldAtIndex()
 {
   maxValue = 0;
+  minValue = 'NA';
   field = arrayNumFields[fieldIndex];
   for (var i = 0; i < maxIndex; i++)
   {
@@ -88,7 +90,12 @@ function getFieldAtIndex()
     }
     if (maxValue < array.data[i][field])
       maxValue = array.data[i][field];
+    if (minValue == 'NA' || minValue > array.data[i][field])
+      minValue = array.data[i][field];
   }
+  if (minValue == 'NA')
+    minValue = 0;
+  console.log(minValue);
 }
 
 function launchSound()
@@ -135,11 +142,10 @@ function updateValue()
     if (array.data[index][field])
     {
       yFactor = array.data[index][field] / maxValue;
-    
 
       // frequency
       //oscillator.frequency.value = yFactor * maxFreq;
-      oscillator.frequency.value = frequencyCalc(0, maxValue, array.data[index][field]);
+      oscillator.frequency.value = frequencyCalc(minValue, maxValue, array.data[index][field]);
     }
 
     // panning
@@ -155,9 +161,9 @@ function updatePage()
 {
     value = 0 || array.data[index][field];
     if (launch.getAttribute('playing') === 'true')
-      coord.innerHTML = 'index = ' + index + '/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = " + value + "/" + maxValue;
+      coord.innerHTML = 'index = ' + index + '/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = " + value + "/" + maxValue + "(minimum = " + minValue + ")";
     else
-      coord.innerHTML = '';
+      coord.innerHTML = 'index = NA/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = NA/" + maxValue + "(minimum = " + minValue + ")";
 
     // Update canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -247,6 +253,7 @@ function handleFileSelect(evt)
       }
       console.log(arrayNumFields);
       getFieldAtIndex();
+      updatePage();
     }
   });
 }
@@ -299,12 +306,14 @@ body.onkeydown = function(e) {
   {
     fieldIndex = Math.max(fieldIndex - 1, 0);
     getFieldAtIndex();
+    updatePage();
   };
 
   if (e.keyCode == 40) // down
   {
     fieldIndex = Math.min(fieldIndex + 1, arrayNumFields.length - 1);
     getFieldAtIndex();
+    updatePage();
   };
 
 }
