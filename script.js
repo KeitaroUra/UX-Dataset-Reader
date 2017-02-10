@@ -81,7 +81,7 @@ function getFieldAtIndex()
   field = arrayNumFields[fieldIndex];
   for (var i = 0; i < maxIndex; i++)
   {
-    if (!array.data[i][field])
+    if (array.data[i][field] == null)
     {
       maxIndex = i;
       break;
