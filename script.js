@@ -315,7 +315,7 @@ radioOnClick = function()
   }
 }
 
-radio.onclick = radioOnClick;
+//radio.onclick = radioOnClick;
 
 // coord
 var coord = document.getElementById('coord');
