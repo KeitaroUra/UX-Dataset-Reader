@@ -55,6 +55,7 @@ var index = 0;
 var maxIndex = 0;
 var maxValue = 0;
 var minValue = 0;
+var rangeValue = 0;
 var fieldIndex = 0;
 var field = '';
 var paused = false;
@@ -107,6 +108,7 @@ function getArrayProperties()
   }
   if (minValue == 'NA')
     minValue = 0;
+  rangeValue = maxValue - minValue;
   console.log(maxIndex);
 }
 
@@ -159,7 +161,7 @@ function updateValue()
   {
     xFactor = index / maxIndex;
     value = array.data[index][field] || 0;
-    yFactor = value / maxValue;
+    yFactor = (value - minValue) / rangeValue;
 
     // frequency
     //oscillator.frequency.value = yFactor * maxFreq;
@@ -200,7 +202,7 @@ function updatePage()
         if (array.data[i] != null)
         {
           xPos = (i) / maxIndex * canvas.width;
-          yPos = canvas.height - (array.data[i][field] / maxValue * canvas.height);
+          yPos = canvas.height - ((array.data[i][field] - minValue) / rangeValue * canvas.height);
           xPosArray[i] = xPos;
           yPosArray[i] = yPos;
           if (i > 0)
@@ -222,7 +224,7 @@ function updatePage()
         if (array.data[i] != null)
         {
           xPos = (i) / maxIndex * canvas.width;
-          yPos = canvas.height - (array.data[i][field] / maxValue * canvas.height);
+          yPos = canvas.height - ((array.data[i][field] - minValue) / rangeValue * canvas.height);
           context.beginPath();
           context.arc(xPos, yPos, 3, 0, 2*Math.PI);
           context.fill();
