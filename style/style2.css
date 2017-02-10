@@ -1,0 +1,199 @@
+html
+{
+  font-size: 16px;
+  height: 100%;
+}
+
+body
+{
+  font: normal .80em 'trebuchet ms', arial, sans-serif;
+  width: 100%;
+  margin: 0px;
+/*  background-image: linear-gradient(to bottom,  #cfcfff 0%,#ccccff 100%); */
+}
+
+
+/* header styling */
+
+h1
+{
+  text-align: center;
+  font-size: 3rem;
+  margin: 0;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(0,0,0,0.3) ;
+}
+
+h2
+{
+  margin-top: 25px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 5px rgba(0,0,0,0.3) ;
+}
+
+p
+{ padding: 0 0 20px 0;
+  line-height: 1.7em;}
+
+canvas
+{
+  margin-top:5px;
+}
+
+/* button styling */
+
+.myButton
+{
+    background-color: #0088cc;
+    background-image: linear-gradient(to bottom,  #0088cc 0%,#0055cc 100%); 
+    text-shadow: 1px 1px 1px black;  
+    color: white;
+    border: none;
+    width: 100%;
+    font-size: 1.6rem; 
+    line-height: 2rem;
+    padding: .5rem; 
+    opacity: 1.0;
+    
+    transition: 1s all;
+    -webkit-transition: 1s all;
+}
+
+.myButton:hover, .myButton:focus
+{
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.7);
+  background-image: linear-gradient(to bottom,  #0088cc 0%,#0055cc 20%); 
+  
+}
+
+.myButton:active
+{
+  box-shadow: inset 2px 2px 3px rgba(0,0,0,0.7);
+  background-image: linear-gradient(to bottom,  #0088cc 0%,#0055cc 50%); 
+}
+
+.myButton:disabled
+{
+  background-image: linear-gradient(to bottom,  #bbbbbb 0%,#888888 100%); 
+  opacity:0.5;
+}
+
+.myButton2
+{
+  
+    background-color: #0088cc;
+    background-image: linear-gradient(to bottom,  #0088cc 0%,#0055cc 100%); 
+    text-shadow: 1px 1px 1px black;  
+    color: white;
+    border: none;
+    font-size: 1.6rem; 
+    line-height: 2rem;
+    padding: .5rem; 
+    opacity: 1.0;
+    margin-top:25px;
+    margin-bottom:25px;
+    transition: 1s all;
+    -webkit-transition: 1s all;
+    
+    width:100%;
+}
+
+.myButton2:hover, .myButton2:focus
+{
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.7);
+  background-image: linear-gradient(to bottom,  #0088cc 0%,#0055cc 20%); 
+  
+}
+
+.myButton2:active
+{
+  box-shadow: inset 2px 2px 3px rgba(0,0,0,0.7);
+  background-image: linear-gradient(to bottom,  #0088cc 0%,#0055cc 50%); 
+}
+
+.myButton2:disabled
+{
+  background-image: linear-gradient(to bottom,  #bbbbbb 0%,#888888 100%); 
+  opacity:0.5;
+}
+
+#launch
+{
+}
+
+#shortcuts
+{
+  position: absolute;
+  margin: 5px;
+}
+
+#footer
+{
+position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0rem;
+  background-color: #efefef;
+  text-align: center;
+  font-family: 'trebuchet ms', sans-serif;
+  font-size: 100%;
+  height: 80px;
+
+}
+
+#footer p
+{ 
+  line-height: 1.7em;
+  padding: 0 0 1px 0;
+}
+
+#footer a
+{ color: #A8AA94;
+  text-decoration: none;}
+
+#footer a:hover
+{ color: #FFF;
+  text-decoration: none;}
+
+
+#site_content {
+  width: 640px;
+}
+
+.centerElement
+{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.centerElementHeight
+{
+  margin-top:30%;
+}
+
+.hidden {
+  display: none;
+}
+
+.specialButton {
+  width:200px;
+  height:50px;
+}
+
+#help
+{
+  width:300px;
+}
+
+#presentation
+{
+  width:400px;
+}
+
+#canvas
+{
+  border-style: solid;
+  border-width: 1px;
+}
