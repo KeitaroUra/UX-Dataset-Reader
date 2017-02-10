@@ -49,7 +49,7 @@ var canvas = document.querySelector('#canvas');
 var context = canvas.getContext("2d");
 context.strokeRect(0, 0, canvas.width, canvas.height);
 
-var interval = 140;
+var interval = 100;
 var timeElapsed = 0;
 var index = 0;
 var maxIndex = 0;
@@ -58,6 +58,8 @@ var minValue = 0;
 var fieldIndex = 0;
 var field = '';
 var paused = false;
+var muted = false;
+var soundPlaying = false;
 
 var rectsize = 8;
 var rectsizehalf = rectsize / 2.0;
@@ -100,15 +102,19 @@ function getFieldAtIndex()
 
 function launchSound()
 {
-  timeElapsed = 0;
-  index = 0;
-  maxIndex = array.data.length - 1;
-  getFieldAtIndex();
+  if (soundPlaying == false)
+  {
+    soundPlaying = true;
+    timeElapsed = 0;
+    index = 0;
+    maxIndex = array.data.length - 1;
+    getFieldAtIndex();
 
-  xFactor = 0;
-  yFactor = 0;
-  updatePage();
-  intervalTimer = setInterval(nextValue, interval);
+    xFactor = 0;
+    yFactor = 0;
+    updatePage();
+    intervalTimer = setInterval(nextValue, interval);
+  }
 }
 
 function nextValue()
@@ -159,15 +165,15 @@ function updateValue()
 
 function updatePage()
 {
-    value = 0 || array.data[index][field];
-    if (launch.getAttribute('playing') === 'true')
-      coord.innerHTML = 'index = ' + index + '/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = " + value + "/" + maxValue + "(minimum = " + minValue + ")";
+    value = array.data[index][field];
+    if (soundPlaying == true)
+      coord.innerHTML = 'index = ' + index + '/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = " + value + "/" + maxValue + " (minimum = " + minValue + ")";
     else
       coord.innerHTML = 'index = NA/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = NA/" + maxValue + "(minimum = " + minValue + ")";
 
     // Update canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
-    if (launch.getAttribute('playing') === 'true')
+    if (soundPlaying == true)
     {
       var posX = xFactor * canvas.width;
       var posY = canvas.height - (yFactor * canvas.height);
@@ -180,20 +186,36 @@ function updatePage()
 var launch = document.getElementById('launch');
 launch.disabled = true;
 
+mute = function()
+{
+  gainNode.gain.value = 0;
+  muted = true;
+}
+
+unmute = function()
+{
+  gainNode.gain.value = initialVol;
+  muted = false;
+}
+
 stopSound = function()
 {
-  gainNode.disconnect(audioCtx.destination);
-  launch.setAttribute('playing', 'false');
-  launch.innerHTML = "Launch";
-  launch.disabled = false;
-  launch.checked = false;
-  launch.hovered = false;
-
+  if (soundPlaying == true)
+  {
+    gainNode.disconnect(audioCtx.destination);
+    launch.setAttribute('playing', 'false');
+    launch.innerHTML = "Launch";
+    launch.disabled = false;
+    launch.checked = false;
+    launch.hovered = false;
+    soundPlaying = false;
+    index = 0;
+  }
 }
 
 launchOnClick = function() 
 {
-  if (launch.getAttribute('playing') === 'false')
+  if (soundPlaying == false)
   {
     gainNode.connect(audioCtx.destination);
     launch.setAttribute('playing', 'true');
@@ -233,6 +255,8 @@ function handleFileSelect(evt)
 {
   var file = evt.target.files[0];
 
+  if (soundPlaying == true)
+    stopSound();
   Papa.parse(file, {
     header: true,
     dynamicTyping: true,
@@ -272,11 +296,6 @@ frequencyCalc = function(min, max, current)
     return (440 * Math.pow(2, (current/12)));
 }
 
-//var wind = document.getElementById('test');
-//wind.onclick = frequencyCalc(0, 1000, 0);
-
-
-
 var body = document.querySelector('body');
 
 body.onkeydown = function(e) {
@@ -284,36 +303,47 @@ body.onkeydown = function(e) {
   // 37 is arrow left, 39 is arrow right,
   // 38 is arrow up, 40 is arrow down
 
-  if (e.keyCode == 80) // p
+  if (soundPlaying)
   {
-    paused = !paused;
-    updateValue();
-  };
+    if (e.keyCode == 80) // p
+    {
+      paused = !paused;
+      updateValue();
+    };
 
-  if (paused && e.keyCode == 37) // left
-  {
-    index = Math.max(index - 1, 0);
-    updateValue();
-  };
+    if (paused && e.keyCode == 37) // left
+    {
+      index = Math.max(index - 1, 0);
+      updateValue();
+    };
 
-  if (paused && e.keyCode == 39) // right
-  {
-    index = Math.min(index + 1, maxIndex - 1);
-    updateValue();
-  };
+    if (paused && e.keyCode == 39) // right
+    {
+      index = Math.min(index + 1, maxIndex - 1);
+      updateValue();
+    };
 
-  if (e.keyCode == 38) // up
-  {
-    fieldIndex = Math.max(fieldIndex - 1, 0);
-    getFieldAtIndex();
-    updatePage();
-  };
+    if (e.keyCode == 38) // up
+    {
+      fieldIndex = Math.max(fieldIndex - 1, 0);
+      getFieldAtIndex();
+      updatePage();
+    };
 
-  if (e.keyCode == 40) // down
-  {
-    fieldIndex = Math.min(fieldIndex + 1, arrayNumFields.length - 1);
-    getFieldAtIndex();
-    updatePage();
-  };
+    if (e.keyCode == 40) // down
+    {
+      fieldIndex = Math.min(fieldIndex + 1, arrayNumFields.length - 1);
+      getFieldAtIndex();
+      updatePage();
+    };
+
+    if (e.keyCode == 77) // m
+    {
+      if (muted)
+        unmute();
+      else
+        mute();
+    };
+  }
 
 }
