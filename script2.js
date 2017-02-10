@@ -316,6 +316,7 @@ function handleFileSelect(evt)
   var file = evt.target.files[0];
 
   if (file != null)
+  {
     if (soundPlaying == true)
       stopSound();
     Papa.parse(file, {
