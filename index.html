@@ -9,6 +9,7 @@
 <body>
   <h1>Dataset Audio</h1>
   <div style="text-align:center;">
+   <input type="file" id="csv-file" name="files"/><br>
    <button id="launch" playing="false">Launch</button>
 
    <h2>Sound Type</h2>
@@ -23,12 +24,13 @@
   <canvas id="canvas" width="640" height="360">
     <p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p>
   </canvas>
+  <div id="coord"></div>
 </div>
 
 <script src="./papaparse.min.js"></script>
 <script src="./jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="script.js"></script>
-<input type="file" id="csv-file" name="files"/>
+
 
 </body>
 </html>

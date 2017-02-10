@@ -1,4 +1,5 @@
 var array;
+var arrayNumFields;
 
 // Sound API
 
@@ -51,9 +52,11 @@ context.strokeRect(0, 0, canvas.width, canvas.height);
 var interval = 140;
 var timeElapsed = 0;
 var index = 0;
-var MaxIndex = 0;
+var maxIndex = 0;
 var maxValue = 0;
-var field = 'Distance (km)';
+var fieldIndex = 0;
+var field = '';
+var paused = false;
 
 var rectsize = 8;
 var rectsizehalf = rectsize / 2.0;
@@ -62,17 +65,38 @@ var yFactor;
 var xFactor;
 var intervalTimer;
 
+function isInt(n)
+{
+    return Number(n) === n && n % 1 === 0;
+}
+
+function isFloat(n)
+{
+    return Number(n) === n && n % 1 !== 0;
+}
+
+function getFieldAtIndex()
+{
+  maxValue = 0;
+  field = arrayNumFields[fieldIndex];
+  for (var i = 0; i < maxIndex; i++)
+  {
+    if (!array.data[i][field])
+    {
+      maxIndex = i;
+      break;
+    }
+    if (maxValue < array.data[i][field])
+      maxValue = array.data[i][field];
+  }
+}
+
 function launchSound()
 {
   timeElapsed = 0;
   index = 0;
-  MaxIndex = array.data.length;
-  maxValue = 0;
-  for (var i = 0; i < MaxIndex; i++)
-  {
-    if (maxValue < array.data[i][field])
-      maxValue = array.data[i][field];
-  }
+  maxIndex = array.data.length - 1;
+  getFieldAtIndex();
 
   xFactor = 0;
   yFactor = 0;
@@ -82,41 +106,67 @@ function launchSound()
 
 function nextValue()
 {
-  if (index < MaxIndex && array.data[index][field])
+  if (!paused)
   {
-    timeElapsed += interval;
+    if (index < maxIndex)
+    {
+      timeElapsed += interval;
 
-    yFactor = array.data[index][field] / maxValue;
-    xFactor = index / MaxIndex;
+      updateValue();
+
+      index++;
+    }
+    else
+    {
+      // Stop timer
+      window.clearInterval(intervalTimer);
+      stopSound();
+      updatePage();
+      return false;
+    }
+  }
+}
+
+function updateValue()
+{
+  if (index < maxIndex)
+  {
+    xFactor = index / maxIndex;
+    if (array.data[index][field])
+    {
+      yFactor = array.data[index][field] / maxValue;
     
-    // frequency
-    oscillator.frequency.value = yFactor * maxFreq;
+
+      // frequency
+      //oscillator.frequency.value = yFactor * maxFreq;
+      oscillator.frequency.value = frequencyCalc(0, maxValue, array.data[index][field]);
+    }
 
     // panning
     var x = -1.0 + (xFactor * 2.0);
     panner.setPosition(x, 0, 1 - Math.abs(x));
 
-    updatePage();
 
-    index++;
-  }
-  else
-  {
-    // Stop timer
-    window.clearInterval(intervalTimer);
-    stopSound();
     updatePage();
-    return false;
   }
 }
 
 function updatePage()
 {
+    value = 0 || array.data[index][field];
+    if (launch.getAttribute('playing') === 'true')
+      coord.innerHTML = 'index = ' + index + '/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = " + value + "/" + maxValue;
+    else
+      coord.innerHTML = '';
+
     // Update canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
-    var posX = xFactor * canvas.width;
-    var posY = canvas.height - (yFactor * canvas.height);
-    context.fillRect(posX - rectsizehalf, posY - rectsizehalf, rectsize, rectsize);
+    if (launch.getAttribute('playing') === 'true')
+    {
+      var posX = xFactor * canvas.width;
+      var posY = canvas.height - (yFactor * canvas.height);
+      context.fillRect(posX - rectsizehalf, posY - rectsizehalf, rectsize, rectsize);
+    }
     context.strokeRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -160,13 +210,16 @@ radioOnClick = function()
     if (radio[i].checked)
     {
       oscillator.type = radio[i].value;
-            // only one radio can be logically checked, don't check the rest
-            break;
+      // only one radio can be logically checked, don't check the rest
+      break;
     }
   }
 }
 
 radio.onclick = radioOnClick;
+
+// coord
+var coord = document.getElementById('coord');
 
 // PARSING
 
@@ -182,6 +235,18 @@ function handleFileSelect(evt)
       array = results;
       console.log(array);
       launch.disabled = false;
+      fieldIndex = 0;
+      var fi = 0;
+      arrayNumFields = [];
+      for (var i = 0, length = array.meta.fields.length; i < length; i++)
+      {
+        if (isInt(array.data[0][array.meta.fields[i]]) || isFloat(array.data[0][array.meta.fields[i]]))
+        {
+          arrayNumFields.push(array.meta.fields[i]);
+        }
+      }
+      console.log(arrayNumFields);
+      getFieldAtIndex();
     }
   });
 }
@@ -204,3 +269,42 @@ frequencyCalc = function(min, max, current)
 //wind.onclick = frequencyCalc(0, 1000, 0);
 
 
+
+var body = document.querySelector('body');
+
+body.onkeydown = function(e) {
+
+  // 37 is arrow left, 39 is arrow right,
+  // 38 is arrow up, 40 is arrow down
+
+  if (e.keyCode == 80) // p
+  {
+    paused = !paused;
+    updateValue();
+  };
+
+  if (paused && e.keyCode == 37) // left
+  {
+    index = Math.max(index - 1, 0);
+    updateValue();
+  };
+
+  if (paused && e.keyCode == 39) // right
+  {
+    index = Math.min(index + 1, maxIndex - 1);
+    updateValue();
+  };
+
+  if (e.keyCode == 38) // up
+  {
+    fieldIndex = Math.max(fieldIndex - 1, 0);
+    getFieldAtIndex();
+  };
+
+  if (e.keyCode == 40) // down
+  {
+    fieldIndex = Math.min(fieldIndex + 1, arrayNumFields.length - 1);
+    getFieldAtIndex();
+  };
+
+}
