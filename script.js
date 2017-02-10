@@ -127,7 +127,6 @@ function nextValue()
       timeElapsed += interval;
 
       updateValue();
-      speakValue("index", index, array.data[index][field]);
 
       index++;
     }
@@ -333,6 +332,7 @@ body.onkeydown = function(e) {
       e.preventDefault();
       fieldIndex = Math.max(fieldIndex - 1, 0);
       getFieldAtIndex();
+      speak("Now going through " + field);
       updatePage();
     };
 
@@ -341,22 +341,36 @@ body.onkeydown = function(e) {
       e.preventDefault();
       fieldIndex = Math.min(fieldIndex + 1, arrayNumFields.length - 1);
       getFieldAtIndex();
+      speak("Now going through " + field);
       updatePage();
     };
 
     if (e.keyCode == 77) // m
     {
+      e.preventDefault();
       if (muted)
         unmute();
       else
         mute();
     };
+
+    if (e.keyCode == 80) // p
+    {
+      e.preventDefault();
+      speakValue("index", index, array.data[index][field]);
+        
+    };
   }
 
 }
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
 
 speak = function(text, voice) {
+    text = text.replaceAll("/", "divided by");
     responsiveVoice.speak(text, voice);
 }
 
