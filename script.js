@@ -33,7 +33,7 @@ var initialVol = 0.02;
 // set options for the oscillator
 
 oscillator.type = 'sine';
-oscillator.detune.value = 100; // value in cents
+oscillator.detune.value = 0; // value in cents
 oscillator.start(0);
 
 oscillator.onended = function()
@@ -60,9 +60,10 @@ var field = '';
 var paused = false;
 var muted = false;
 var soundPlaying = false;
+var borderSize;
+var muteUntilCommand = false;
 
-var rectsize = 8;
-var rectsizehalf = rectsize / 2.0;
+var circleRadius = 4;
 
 var yFactor;
 var xFactor;
@@ -78,26 +79,35 @@ function isFloat(n)
     return Number(n) === n && n % 1 !== 0;
 }
 
-function getFieldAtIndex()
+function isIntOrFloat(n)
+{
+    return isInt(n) || isFloat(n);
+}
+
+function getArrayProperties()
 {
   maxValue = 0;
   minValue = 'NA';
+  maxIndex = array.data.length - 2;
   field = arrayNumFields[fieldIndex];
-  for (var i = 0; i < maxIndex; i++)
+  for (var i = 0; i < array.data.length; i++)
   {
-    if (array.data[i][field] == null)
+    if (isIntOrFloat(array.data[i][field]))
     {
-      maxIndex = i;
-      break;
+      /*if (array.data[i] == null || array.data[i][field] == null) // last field is invalid
+      {
+        maxIndex = i - 1;
+        break;
+      }*/
+      if (maxValue < array.data[i][field])
+        maxValue = array.data[i][field];
+      if (minValue == 'NA' || minValue > array.data[i][field])
+        minValue = array.data[i][field];
     }
-    if (maxValue < array.data[i][field])
-      maxValue = array.data[i][field];
-    if (minValue == 'NA' || minValue > array.data[i][field])
-      minValue = array.data[i][field];
   }
   if (minValue == 'NA')
     minValue = 0;
-  console.log(minValue);
+  console.log(maxIndex);
 }
 
 function launchSound()
@@ -105,11 +115,11 @@ function launchSound()
   if (soundPlaying == false)
   {
     soundPlaying = true;
+    gainNode.connect(audioCtx.destination);
     timeElapsed = 0;
     index = 0;
     paused = true;
-    maxIndex = array.data.length - 1;
-    getFieldAtIndex();
+    getArrayProperties();
 
     xFactor = 0;
     yFactor = 0;
@@ -122,7 +132,7 @@ function nextValue()
 {
   if (!paused)
   {
-    if (index < maxIndex)
+    if (index <= maxIndex)
     {
       timeElapsed += interval;
 
@@ -133,8 +143,10 @@ function nextValue()
     else
     {
       // Stop timer
-      window.clearInterval(intervalTimer);
-      stopSound();
+      paused = true;
+      muteUntilCommand = true;
+      mute();
+      index = maxIndex;
       updatePage();
       return false;
     }
@@ -143,17 +155,15 @@ function nextValue()
 
 function updateValue()
 {
-  if (index < maxIndex)
+  if (index <= maxIndex)
   {
     xFactor = index / maxIndex;
-    if (array.data[index][field])
-    {
-      yFactor = array.data[index][field] / maxValue;
+    value = array.data[index][field] || 0;
+    yFactor = value / maxValue;
 
-      // frequency
-      //oscillator.frequency.value = yFactor * maxFreq;
-      oscillator.frequency.value = frequencyCalc(minValue, maxValue, array.data[index][field]);
-    }
+    // frequency
+    //oscillator.frequency.value = yFactor * maxFreq;
+    oscillator.frequency.value = frequencyCalc(minValue, maxValue, value);
 
     // panning
     var x = -1.0 + (xFactor * 2.0);
@@ -176,16 +186,59 @@ function updatePage()
     context.clearRect(0, 0, canvas.width, canvas.height);
     if (soundPlaying == true)
     {
+      var xPosArray = [];
+      var yPosArray = [];
+      var xPosPrev;
+      var yPosPrev;
+      var xPos;
+      var yPos;
+      // Draw lines
+      context.fillStyle = "black";
+      context.beginPath();
+      for (var i = 0; i <= maxIndex; i++)
+      {
+        if (array.data[i] != null)
+        {
+          xPos = (i) / maxIndex * canvas.width;
+          yPos = canvas.height - (array.data[i][field] / maxValue * canvas.height);
+          xPosArray[i] = xPos;
+          yPosArray[i] = yPos;
+          if (i > 0)
+          {
+            context.lineTo(xPos, yPos);
+          }
+          else
+            context.moveTo(xPos, yPos); // start point
+          xPosPrev = xPos;
+          yPosPrev = yPos;
+        }
+      }
+      context.stroke();
+      context.closePath();
+      // Draw points
+      context.fillStyle = "blue";
+      for (var i = 0; i < maxIndex; i++)
+      {
+        if (array.data[i] != null)
+        {
+          xPos = (i) / maxIndex * canvas.width;
+          yPos = canvas.height - (array.data[i][field] / maxValue * canvas.height);
+          context.beginPath();
+          context.arc(xPos, yPos, 3, 0, 2*Math.PI);
+          context.fill();
+          context.closePath();
+        }
+      }
+      // Draw current pos
       var posX = xFactor * canvas.width;
       var posY = canvas.height - (yFactor * canvas.height);
-      context.fillRect(posX - rectsizehalf, posY - rectsizehalf, rectsize, rectsize);
+      context.beginPath();
+      context.fillStyle = "red";
+      context.arc(posX, posY, circleRadius, 0, 2*Math.PI);
+      context.fill();
+      context.closePath();
     }
-    context.strokeRect(0, 0, canvas.width, canvas.height);
 }
-
-// launch button
-var launch = document.getElementById('launch');
-launch.disabled = true;
 
 mute = function()
 {
@@ -199,35 +252,39 @@ unmute = function()
   muted = false;
 }
 
+// launch button
+//var launch = document.getElementById('launch');
+//launch.disabled = true;
+
 stopSound = function()
 {
   if (soundPlaying == true)
   {
     gainNode.disconnect(audioCtx.destination);
-    launch.setAttribute('playing', 'false');
+    /*launch.setAttribute('playing', 'false');
     launch.innerHTML = "Launch";
     launch.disabled = false;
     launch.checked = false;
-    launch.hovered = false;
+    launch.hovered = false;*/
     soundPlaying = false;
     index = 0;
   }
 }
 
-launchOnClick = function() 
+/*launchOnClick = function() 
 {
   if (soundPlaying == false)
   {
-    gainNode.connect(audioCtx.destination);
     launch.setAttribute('playing', 'true');
     launch.innerHTML = "Playing";
     launch.disabled = true;
 
     launchSound();
+    updateValue();
   }
 }
 
-launch.addEventListener("click", launchOnClick)
+launch.addEventListener("click", launchOnClick)*/
 
 // Radio
 var radio = document.getElementById('oscillatorType')
@@ -265,7 +322,7 @@ function handleFileSelect(evt)
     {
       array = results;
       console.log(array);
-      launch.disabled = false;
+      //launch.disabled = false;
       fieldIndex = 0;
       var fi = 0;
       arrayNumFields = [];
@@ -277,8 +334,9 @@ function handleFileSelect(evt)
         }
       }
       console.log(arrayNumFields);
-      getFieldAtIndex();
-      updatePage();
+      getArrayProperties();
+      launchSound();
+      updateValue();
       updateFieldList(arrayNumFields);
     }
   });
@@ -314,6 +372,15 @@ frequencyCalc = function(min, max, current)
 
 var body = document.querySelector('body');
 
+unmuteWithCommand = function()
+{
+  if (muteUntilCommand)
+  {
+    muteUntilCommand = false;
+    unmute();
+  }
+}
+
 body.onkeydown = function(e) {
 
   // 37 is arrow left, 39 is arrow right,
@@ -323,6 +390,7 @@ body.onkeydown = function(e) {
   {
     if (e.keyCode == 32) // space
     {
+      unmuteWithCommand();
       e.preventDefault();
       paused = !paused;
       updateValue();
@@ -330,6 +398,7 @@ body.onkeydown = function(e) {
 
     if (paused && e.keyCode == 37) // left
     {
+      unmuteWithCommand();
       e.preventDefault();
       index = Math.max(index - 1, 0);
       updateValue();
@@ -337,27 +406,36 @@ body.onkeydown = function(e) {
 
     if (paused && e.keyCode == 39) // right
     {
+      unmuteWithCommand();
       e.preventDefault();
-      index = Math.min(index + 1, maxIndex - 1);
+      index = Math.min(index + 1, maxIndex);
       updateValue();
     };
 
     if (e.keyCode == 38) // up
     {
+      unmuteWithCommand();
       e.preventDefault();
-      fieldIndex = Math.max(fieldIndex - 1, 0);
-      getFieldAtIndex();
-      speak("Now going through " + field);
-      updatePage();
+      if (fieldIndex > 0)
+      {
+        fieldIndex = fieldIndex - 1;
+        getArrayProperties();
+        speak("Now going through " + field);
+        updateValue();
+      }
     };
 
     if (e.keyCode == 40) // down
     {
+      unmuteWithCommand();
       e.preventDefault();
-      fieldIndex = Math.min(fieldIndex + 1, arrayNumFields.length - 1);
-      getFieldAtIndex();
-      speak("Now going through " + field);
-      updatePage();
+      if (fieldIndex < arrayNumFields.length - 1)
+      {
+        fieldIndex = fieldIndex + 1;
+        getArrayProperties();
+        speak("Now going through " + field);
+        updateValue();
+      }
     };
 
     if (e.keyCode == 77) // m
@@ -367,10 +445,12 @@ body.onkeydown = function(e) {
         unmute();
       else
         mute();
+      unmuteWithCommand();
     };
 
     if (e.keyCode == 80) // p
     {
+      unmuteWithCommand();
       e.preventDefault();
       speakValue("index", index, array.data[index][field]);
         
@@ -391,6 +471,6 @@ speak = function(text, voice) {
 
 speakValue = function(enteteX, xValue, yValue)
 {
-    speak(field + " has value " + yValue + " when " + enteteX + " equals " + xValue, "UK English Female");
-    console.log(field + " has value " + yValue + " when " + enteteX + " equals " + xValue);
+    speak(field + " has value " + yValue + " at " + enteteX + " equals " + xValue, "UK English Female");
+    console.log(field + " has value " + yValue + " at " + enteteX + " equals " + xValue);
 }

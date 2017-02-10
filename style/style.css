@@ -83,12 +83,41 @@ input
   margin: 2px;
 }
 
-#launch
+
+button
 {
-  margin : 2px;
-  background: #AEB002;
-  padding: 20px;
-  color : white;
+    background-color: #88cc00;
+    background-image: linear-gradient(to bottom,  #88cc00 0%,#44cc00 100%); 
+    text-shadow: 1px 1px 1px black;  
+    color: white;
+    border: none;
+    width: 100px;
+    font-size: 1.6rem; 
+    line-height: 2rem;
+    padding: .5rem; 
+    margin:25px;
+    opacity: 1.0;
+    
+    transition: 1s all;
+    -webkit-transition: 1s all;
+}
+
+button:hover, button:focus
+{
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.7);
+  background-image: linear-gradient(to bottom,  #cc9b00 0%,#cc6600 100%); 
+}
+
+button:active
+{
+  box-shadow: inset 2px 2px 3px rgba(0,0,0,0.7);
+  background-image: linear-gradient(to bottom,  #cccc00 0%,#ccaa00 100%); 
+}
+
+button:disabled
+{
+  background-image: linear-gradient(to bottom,  #bbbbbb 0%,#888888 100%); 
+  opacity:0.5;
 }
 
 .left
@@ -343,3 +372,9 @@ table tr td
 { background: #E5E5DB;
   color: #47433F;
   border-top: 1px solid #FFF;}
+
+#canvas
+{
+  border-style: solid;
+  border-width: 1px;
+}
