@@ -342,7 +342,7 @@ function handleFileSelect(evt)
         launchSound();
         updateValue();
         updateFieldList(arrayNumFields);
-        speak("Opened a dataset of " + maxIndex + " rows. Press space to start. Press space to start. Press F1 for instructions.")
+        speak("Opened a dataset of " + maxIndex + " rows. Press space to start. Press F1 for instructions.")
       }
     });
   }
