@@ -322,7 +322,6 @@ function handleFileSelect(evt)
     dynamicTyping: true,
     complete: function(results)
     {
-      alert("ok");
       stopVoice();
       speakHelp();
       $("#presentation").hide();
@@ -348,17 +347,20 @@ function handleFileSelect(evt)
       launchSound();
       updateValue();
       updateFieldList(arrayNumFields);
+      speak("Opened a dataset of " + maxIndex + " rows. Press space to start.")
     }
   });
 }
 
 function speakPresentation()
 {
-  speak("Here you can show a CSV dataset in a graph. Press I to upload a file of click on the Open File button.");
+  responsiveVoice.cancel();
+  speak("Here you can show a CSV dataset in a graph. n to upload a file or click on the Open File button.");
 }
 
 function speakHelp()
 {
+  responsiveVoice.cancel();
   speak("Use Left and Right to Navigate the X axis. Use Up and Down to change de Y axis field. Use Space to Pause or launch the whole set. Use M to mute the sound. P to get the data at the current position. Press H to listen to this again.");
 }
 
@@ -420,7 +422,7 @@ body.onkeydown = function(e) {
       e.preventDefault();
       paused = !paused;
       updateValue();
-    };
+    }
 
     if (paused && e.keyCode == 37) // left
     {
@@ -428,7 +430,7 @@ body.onkeydown = function(e) {
       e.preventDefault();
       index = Math.max(index - 1, 0);
       updateValue();
-    };
+    }
 
     if (paused && e.keyCode == 39) // right
     {
@@ -436,7 +438,7 @@ body.onkeydown = function(e) {
       e.preventDefault();
       index = Math.min(index + 1, maxIndex);
       updateValue();
-    };
+    }
 
     if (e.keyCode == 38) // up
     {
@@ -446,10 +448,10 @@ body.onkeydown = function(e) {
       {
         fieldIndex = fieldIndex - 1;
         getArrayProperties();
-        speak("Now going through " + field);
+        speak("Now going through " + field + ".");
         updateValue();
       }
-    };
+    }
 
     if (e.keyCode == 40) // down
     {
@@ -459,10 +461,22 @@ body.onkeydown = function(e) {
       {
         fieldIndex = fieldIndex + 1;
         getArrayProperties();
-        speak("Now going through " + field);
+        speak("Now going through " + field + ".");
         updateValue();
       }
-    };
+    }
+
+    if (e.keyCode == 72) // h
+    {
+      e.preventDefault();
+      speakHelp();
+    }
+
+    if (e.keyCode == 73) // i
+    {
+      e.preventDefault();
+      speak("Values range from " + minValue + " to " + maxValue + ".");
+    }
 
     if (e.keyCode == 77) // m
     {
@@ -472,7 +486,7 @@ body.onkeydown = function(e) {
       else
         mute();
       unmuteWithCommand();
-    };
+    }
 
     if (e.keyCode == 80) // p
     {
@@ -480,8 +494,14 @@ body.onkeydown = function(e) {
       e.preventDefault();
       speakValue("index", index, array.data[index][field]);
         
-    };
+    }
   }
+
+    if (e.keyCode == 78) // n
+    {
+      e.preventDefault();
+      $("#csv-file").trigger("click");
+    }
 
 }
 
