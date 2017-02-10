@@ -22,9 +22,9 @@
       <div id="menubar">
         <ul id="menu">
           <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
-          <li class="selected"><a href="index.html">Home</a></li>
+          <li><a href="index.html">Home</a></li>
           <li><a href="examples.html">CSV samples</a></li>
-          <li><a href="contact.html">Contact Us</a></li>
+          <li class="selected"><a href="contact.html">Contact Us</a></li>
         </ul>
       </div>
     </div>
@@ -51,7 +51,7 @@
           <h3>Search</h3>
           <form method="post" action="#" id="search_form">
             <p>
-            <input class="search" type="text" name="search_field" value="Enter keywords ..." />
+              <input class="search" type="text" name="search_field" value="Enter keywords ..." />
               <input name="search" type="image" style="border: 0; margin: 0 0 -9px 5px;" src="style/search.png" alt="Search" title="Search" />
             </p>
           </form>
@@ -60,38 +60,8 @@
       </div>
     </div>
     <div id="content">
+    <h1>Contact us ! </h1>
 
-      <h1>Dataset Audio</h1>
-      <div style="text-align:left;">
-       <input type="file" id="csv-file" name="files" /><br>
-       <button id="launch" playing="false">Launch</button>
-
-       <div style="text-align: left">
-         <h2>Sound Type</h2>
-         <form id = "oscillatorType">
-          <input type="radio" name="gender" value="sine" checked> Sine<br>
-          <input type="radio" name="gender" value="square"> Square<br>
-          <input type="radio" name="gender" value="sawtooth"> Sawtooth<br>
-          <input type="radio" name="gender" value="triangle"> Triangle
-        </form>
-      </div>
-
-      <h2>Display</h2>
-      <canvas id="canvas" width="640" height="360">
-        <p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p>
-      </canvas>
-      <div id="coord"></div>
-    </div>
-      <div id="Shortcuts">
-    <h2>Shortcuts</h2>
-    <ul>
-      <li>Left and Right to Navigate the X axis</li>
-      <li>Up and Down to change de Y axis field</li>
-      <li>Space to Pause</li>
-      <li>M to mute</li>
-      <li>P to hear the data at the current position</li>
-    </ul>
-  </div>
   </div>
 </div>
 <div id="content_footer"></div>
