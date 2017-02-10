@@ -26,9 +26,9 @@ panner.connect(gainNode);
 // create initial theremin frequency and volumn values
 
 var maxFreq = 7000;
-var maxVol = 0.02;
 
-var initialVol = 0.02;
+var volumeFactor = 1.0;
+var initialVol = 0.04;
 
 // set options for the oscillator
 
@@ -41,7 +41,7 @@ oscillator.onended = function()
   console.log('Your tone has now stopped playing!');
 }
 
-gainNode.gain.value = initialVol;
+gainNode.gain.value = initialVol * volumeFactor;
 
 // test canvas
 
@@ -165,7 +165,13 @@ function updateValue()
 
     // frequency
     //oscillator.frequency.value = yFactor * maxFreq;
-    oscillator.frequency.value = frequencyCalc(minValue, maxValue, value);
+    if (maxValue - minValue != 0)
+      oscillator.frequency.value = frequencyCalc(minValue, maxValue, value);
+    else
+    {
+      oscillator.frequency.value = 0;
+    }
+
 
     // panning
     var x = -1.0 + (xFactor * 2.0);
@@ -250,8 +256,13 @@ mute = function()
 
 unmute = function()
 {
-  gainNode.gain.value = initialVol;
+  gainNode.gain.value = initialVol * volumeFactor;
   muted = false;
+}
+
+updateVolume = function()
+{
+  gainNode.gain.value = initialVol * volumeFactor;
 }
 
 // launch button
@@ -342,7 +353,7 @@ function handleFileSelect(evt)
         launchSound();
         updateValue();
         updateFieldList(arrayNumFields);
-        speak("Opened a dataset of " + maxIndex + " rows. Press space to start. Press F1 for instructions.")
+        speak("Dataset of " + maxIndex + " rows opened. Press space to start. Press F1 for instructions.")
       }
     });
   }
@@ -352,7 +363,6 @@ updateFieldList = function(arrayNumFields)
 {
   document.getElementById('fields').innerHTML="<h2>Fields</h2>";
   var ul = document.getElementById('fields');
-  console.log(arrayNumFields);
 
   for (var i = 0, length = arrayNumFields.length; i < length; i++)
   {
@@ -471,10 +481,30 @@ body.onkeydown = function(e) {
     if (e.keyCode == 112)
     {
       e.preventDefault();
-      speak("Left and Right to Navigate the X axis. Up and Down to change de Y axis field. Space to Pause. .M to mute. P to hear the data at the current position. I to hear the minimum and maximum values.");
+      str = "Shortcuts : ";
+      var ul = document.getElementById('shortcutsList');
+      var list = ul.getElementsByTagName("li");
+
+      for (var i = 0, length = list.length; i < length; i++)
+      {
+        str = str + "Press " + list[i].innerHTML + ". ";
+      }
+      speak(str);
     }
   }
 
+}
+
+function voiceStartCallback()
+{
+  volumeFactor = 0.2;
+  updateVolume();
+}
+
+function voiceEndCallback()
+{
+  volumeFactor = 1.0;
+  updateVolume();
 }
 
 String.prototype.replaceAll = function(search, replacement) {
@@ -484,11 +514,15 @@ String.prototype.replaceAll = function(search, replacement) {
 
 speak = function(text, voice) {
     text = text.replaceAll("/", "divided by");
-    responsiveVoice.speak(text, voice);
+    var parameters = {
+      onstart : voiceStartCallback,
+      onend : voiceEndCallback
+    }
+    responsiveVoice.speak(text, voice, parameters);
 }
 
 speakValue = function(enteteX, xValue, yValue)
 {
-    speak(field + " has value " + yValue + " at " + enteteX + " equals " + xValue + ".", "UK English Female");
-    console.log(field + " has value " + yValue + " at " + enteteX + " equals " + xValue);
+    speak(field + " has value " + yValue + " at " + enteteX + " " + xValue + ".", "UK English Female");
+    //console.log(field + " has value " + yValue + " at " + enteteX + " equals " + xValue);
 }
