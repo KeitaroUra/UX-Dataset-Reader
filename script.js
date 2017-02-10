@@ -347,3 +347,5 @@ body.onkeydown = function(e) {
   }
 
 }
+responsiveVoice.speak('Hello World');
+//responsiveVoice.speak("hello world");
