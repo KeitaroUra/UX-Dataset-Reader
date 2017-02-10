@@ -421,6 +421,21 @@ body.onkeydown = function(e) {
       updateValue();
     }
 
+    if (e.keyCode == 8) // Backspace
+    {
+      unmuteWithCommand();
+      e.preventDefault();
+      index = 0;
+      paused = true;
+      updateValue();
+    }
+
+    if (e.keyCode == 27) // Escape
+    {
+      unmuteWithCommand();
+      responsiveVoice.cancel();
+    }
+
     if (paused && e.keyCode == 39) // right
     {
       unmuteWithCommand();
