@@ -107,6 +107,7 @@ function launchSound()
     soundPlaying = true;
     timeElapsed = 0;
     index = 0;
+    paused = true;
     maxIndex = array.data.length - 1;
     getFieldAtIndex();
 
@@ -306,26 +307,30 @@ body.onkeydown = function(e) {
 
   if (soundPlaying)
   {
-    if (e.keyCode == 80) // p
+    if (e.keyCode == 32) // space
     {
+      e.preventDefault();
       paused = !paused;
       updateValue();
     };
 
     if (paused && e.keyCode == 37) // left
     {
+      e.preventDefault();
       index = Math.max(index - 1, 0);
       updateValue();
     };
 
     if (paused && e.keyCode == 39) // right
     {
+      e.preventDefault();
       index = Math.min(index + 1, maxIndex - 1);
       updateValue();
     };
 
     if (e.keyCode == 38) // up
     {
+      e.preventDefault();
       fieldIndex = Math.max(fieldIndex - 1, 0);
       getFieldAtIndex();
       updatePage();
@@ -333,6 +338,7 @@ body.onkeydown = function(e) {
 
     if (e.keyCode == 40) // down
     {
+      e.preventDefault();
       fieldIndex = Math.min(fieldIndex + 1, arrayNumFields.length - 1);
       getFieldAtIndex();
       updatePage();

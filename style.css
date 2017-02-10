@@ -76,3 +76,9 @@ button:disabled
 #launch
 {
 }
+
+#shortcuts
+{
+  position: absolute;
+  margin: 5px;
+}
