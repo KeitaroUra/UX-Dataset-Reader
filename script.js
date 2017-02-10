@@ -315,34 +315,37 @@ function handleFileSelect(evt)
 {
   var file = evt.target.files[0];
 
-  if (soundPlaying == true)
-    stopSound();
-  Papa.parse(file, {
-    header: true,
-    dynamicTyping: true,
-    complete: function(results)
-    {
-      array = results;
-      console.log(array);
-      //launch.disabled = false;
-      fieldIndex = 0;
-      var fi = 0;
-      arrayNumFields = [];
-      for (var i = 0, length = array.meta.fields.length; i < length; i++)
+  if (file != null)
+  {
+    if (soundPlaying == true)
+      stopSound();
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      complete: function(results)
       {
-        if (isInt(array.data[0][array.meta.fields[i]]) || isFloat(array.data[0][array.meta.fields[i]]))
+        array = results;
+        console.log(array);
+        //launch.disabled = false;
+        fieldIndex = 0;
+        var fi = 0;
+        arrayNumFields = [];
+        for (var i = 0, length = array.meta.fields.length; i < length; i++)
         {
-          arrayNumFields.push(array.meta.fields[i]);
+          if (isInt(array.data[0][array.meta.fields[i]]) || isFloat(array.data[0][array.meta.fields[i]]))
+          {
+            arrayNumFields.push(array.meta.fields[i]);
+          }
         }
+        console.log(arrayNumFields);
+        getArrayProperties();
+        launchSound();
+        updateValue();
+        updateFieldList(arrayNumFields);
+        speak("Opened a dataset of " + maxIndex + " rows. Press space to start.")
       }
-      console.log(arrayNumFields);
-      getArrayProperties();
-      launchSound();
-      updateValue();
-      updateFieldList(arrayNumFields);
-      speak("Opened a dataset of " + maxIndex + " rows. Press space to start.")
-    }
-  });
+    });
+  }
 }
 
 updateFieldList = function(arrayNumFields)
