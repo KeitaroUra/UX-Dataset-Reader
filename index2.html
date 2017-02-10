@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>CSV Dataset Reader</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style2.css" />
+</head>
+
+<body>
+  <div id="main">
+    <div id="content_header"></div>
+    <div id="site_content" class="centerElement">
+    <div class="centerElementHeight">
+      <div id="presentation" class="centerElement">
+        <h2>Presentation</h2>
+          <p>
+            Here you can show a CSV dataset in a graph. 
+          <br/>
+            Press "I" to upload a file of click on the "Open File button".
+          </p>
+      </div>
+
+      <div class="centerElement specialButton" >
+       <button class="myButton" id="getInput">Open File</button>
+      </div>
+      <canvas id="canvas" class="hidden" width="640" height="360">
+        <p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p>
+      </canvas>
+      <div id="coord"></div>
+      </div>
+      <div id="help" class="centerElement hidden">
+        <h2>Shortcuts</h2>
+        <ul>
+          <li>Left and Right to Navigate the X axis</li>
+          <li>Up and Down to change de Y axis field</li>
+          <li>Space to Pause</li>
+          <li>M to mute</li>
+          <li>P to hear the data at the current position</li>
+        </ul>
+      </div>
+    </div>
+   <input class="myButton2 centerElement hidden" type="file" id="csv-file" name="files" /><br>
+   <button class="myButton hidden" id="launch" playing="false">Launch</button>
+
+
+</div>
+<div id="content_footer"></div>
+<div id="footer">
+<!--  <p><a href="index.html">Home</a> | <a href="examples.html">Examples</a> | <a href="page.html">A Page</a> | <a href="another_page.html">Another Page</a> | <a href="contact.html">Contact Us</a></p>-->
+  <p>Copyright &copy; simplestyle_banner | <a href="http://validator.w3.org/check?uri=referer">HTML5</a> | <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> | <a href="http://www.html5webtemplates.co.uk">HTML5 Web Templates</a></p>
+</div>
+</div>
+
+<script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+<script src="./papaparse.min.js"></script>
+<script src="./jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="script2.js"></script>
+
+</body>
+</html>
