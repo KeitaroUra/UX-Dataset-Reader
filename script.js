@@ -126,6 +126,7 @@ function nextValue()
       timeElapsed += interval;
 
       updateValue();
+      speakValue("index", index, array.data[index][field]);
 
       index++;
     }
@@ -347,5 +348,14 @@ body.onkeydown = function(e) {
   }
 
 }
-responsiveVoice.speak('Hello World');
-//responsiveVoice.speak("hello world");
+
+
+speak = function(text, voice) {
+    responsiveVoice.speak(text, voice);
+}
+
+speakValue = function(enteteX, xValue, yValue)
+{
+    speak(field + " has value " + yValue + " when " + enteteX + " equals " + xValue, "UK English Female");
+    console.log(field + " has value " + yValue + " when " + enteteX + " equals " + xValue);
+}
