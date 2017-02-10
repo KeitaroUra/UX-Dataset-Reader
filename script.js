@@ -279,8 +279,23 @@ function handleFileSelect(evt)
       console.log(arrayNumFields);
       getFieldAtIndex();
       updatePage();
+      updateFieldList(arrayNumFields);
     }
   });
+}
+
+updateFieldList = function(arrayNumFields)
+{
+  document.getElementById('fields').innerHTML="<h2>Fields</h2>";
+  var ul = document.getElementById('fields');
+  console.log(arrayNumFields);
+
+  for (var i = 0, length = arrayNumFields.length; i < length; i++)
+  {
+    var li = document.createElement("li");
+    li.appendChild(document.createTextNode(arrayNumFields[i]));
+    ul.appendChild(li);  
+  }
 }
 
 $(document).ready(function(){
