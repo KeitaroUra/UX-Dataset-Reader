@@ -262,7 +262,8 @@ unmute = function()
 
 updateVolume = function()
 {
-  gainNode.gain.value = initialVol * volumeFactor;
+  if (!muted)
+    gainNode.gain.value = initialVol * volumeFactor;
 }
 
 // launch button
@@ -353,7 +354,7 @@ function handleFileSelect(evt)
         launchSound();
         updateValue();
         updateFieldList(arrayNumFields);
-        speak("Dataset of " + maxIndex + " rows opened. Press space to start. Press F1 for instructions.")
+        speak("Dataset of " + maxIndex + " rows opened. Press F1 for instructions.")
       }
     });
   }
@@ -518,7 +519,7 @@ speak = function(text, voice) {
       onstart : voiceStartCallback,
       onend : voiceEndCallback
     }
-    responsiveVoice.speak(text, voice, parameters);
+    responsiveVoice.speak(text, voice || "UK English Female", parameters);
 }
 
 speakValue = function(enteteX, xValue, yValue)
