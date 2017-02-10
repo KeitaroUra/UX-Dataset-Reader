@@ -340,6 +340,7 @@ function handleFileSelect(evt)
       launchSound();
       updateValue();
       updateFieldList(arrayNumFields);
+      speak("Opened a dataset of " + maxIndex + " rows.")
     }
   });
 }
@@ -396,7 +397,7 @@ body.onkeydown = function(e) {
       e.preventDefault();
       paused = !paused;
       updateValue();
-    };
+    }
 
     if (paused && e.keyCode == 37) // left
     {
@@ -404,7 +405,7 @@ body.onkeydown = function(e) {
       e.preventDefault();
       index = Math.max(index - 1, 0);
       updateValue();
-    };
+    }
 
     if (paused && e.keyCode == 39) // right
     {
@@ -412,7 +413,7 @@ body.onkeydown = function(e) {
       e.preventDefault();
       index = Math.min(index + 1, maxIndex);
       updateValue();
-    };
+    }
 
     if (e.keyCode == 38) // up
     {
@@ -422,10 +423,10 @@ body.onkeydown = function(e) {
       {
         fieldIndex = fieldIndex - 1;
         getArrayProperties();
-        speak("Now going through " + field);
+        speak("Now going through " + field + ".");
         updateValue();
       }
-    };
+    }
 
     if (e.keyCode == 40) // down
     {
@@ -435,10 +436,16 @@ body.onkeydown = function(e) {
       {
         fieldIndex = fieldIndex + 1;
         getArrayProperties();
-        speak("Now going through " + field);
+        speak("Now going through " + field + ".");
         updateValue();
       }
-    };
+    }
+
+    if (e.keyCode == 73) // i
+    {
+      e.preventDefault();
+      speak("Values range from " + minValue + " to " + maxValue + ".");
+    }
 
     if (e.keyCode == 77) // m
     {
@@ -448,7 +455,7 @@ body.onkeydown = function(e) {
       else
         mute();
       unmuteWithCommand();
-    };
+    }
 
     if (e.keyCode == 80) // p
     {
@@ -456,7 +463,7 @@ body.onkeydown = function(e) {
       e.preventDefault();
       speakValue("index", index, array.data[index][field]);
         
-    };
+    }
   }
 
 }
@@ -473,6 +480,6 @@ speak = function(text, voice) {
 
 speakValue = function(enteteX, xValue, yValue)
 {
-    speak(field + " has value " + yValue + " at " + enteteX + " equals " + xValue, "UK English Female");
+    speak(field + " has value " + yValue + " at " + enteteX + " equals " + xValue + ".", "UK English Female");
     console.log(field + " has value " + yValue + " at " + enteteX + " equals " + xValue);
 }
