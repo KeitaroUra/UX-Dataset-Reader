@@ -532,7 +532,8 @@ speak = function(text, voice) {
     text = text.replaceAll("/", "divided by");
     var parameters = {
       onstart : voiceStartCallback,
-      onend : voiceEndCallback
+      onend : voiceEndCallback,
+      rate : 1.5
     }
     responsiveVoice.speak(text, voice || "UK English Female", parameters);
 }
