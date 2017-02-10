@@ -342,7 +342,7 @@ function handleFileSelect(evt)
         launchSound();
         updateValue();
         updateFieldList(arrayNumFields);
-        speak("Opened a dataset of " + maxIndex + " rows. Press space to start.")
+        speak("Opened a dataset of " + maxIndex + " rows. Press space to start. Press space to start. Press F1 for instructions.")
       }
     });
   }
@@ -466,6 +466,12 @@ body.onkeydown = function(e) {
       e.preventDefault();
       speakValue("index", index, array.data[index][field]);
         
+    }
+
+    if (e.keyCode == 112)
+    {
+      e.preventDefault();
+      speak("Left and Right to Navigate the X axis. Up and Down to change de Y axis field. Space to Pause. .M to mute. P to hear the data at the current position. I to hear the minimum and maximum values.");
     }
   }
 
