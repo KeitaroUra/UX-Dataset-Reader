@@ -109,9 +109,11 @@ var circleRadius = 4;
 var yFactor;
 var xFactor;
 var intervalTimer;
-
-function updateLanguageTab(sLanguage)
+function updateLanguage(sLanguage)
 {
+  hide = document.getElementsByClassName(language);
+  for (var i = 0; i < hide.length; i++)
+    hide[i].style.display = "none";
   language = sLanguage;
   if (language == 'FR')
   {
@@ -123,11 +125,18 @@ function updateLanguageTab(sLanguage)
     languageTab = tabEn;
     voiceLanguage = "UK English Female";
   }
-  console.log("Language updated");
-  console.log(languageTab);
+  show = document.getElementsByClassName(language);
+  for (var i = 0; i < show.length; i++)
+    show[i].style.display = "inline";
 }
 
-updateLanguageTab('FR');
+var languageSelector = document.getElementById('languageSelector')
+languageSelector.onchange = function()
+{
+  updateLanguage(languageSelector.options[languageSelector.selectedIndex].value);
+}
+
+
 
 function isInt(n)
 {
@@ -536,14 +545,6 @@ body.onkeydown = function(e) {
       speak(languageTab['valuesRange'] + minValue + languageTab['valuesRange2'] + maxValue + languageTab['valuesRange3']);
     }
 
-    if (e.keyCode == 76) // l
-    {
-      if (language == 'FR')
-       updateLanguageTab('EN');
-     else
-       updateLanguageTab('FR');
-    }
-
     if (e.keyCode == 77) // m
     {
       e.preventDefault();
@@ -577,11 +578,19 @@ body.onkeydown = function(e) {
     }
   }
 
+  if (e.keyCode == 76) // l
+  {
+    if (language == 'FR')
+     updateLanguage('EN');
+   else
+     updateLanguage('FR');
+  }
+
 }
 
 function voiceStartCallback()
 {
-  volumeFactor = 0.2;
+  volumeFactor = 0;
   updateVolume();
 }
 
@@ -611,3 +620,12 @@ speakValue = function(enteteX, xValue, yValue)
     speak(languageTab['value'] + field + languageTab['value2'] + yValue + languageTab['value3'] + enteteX + languageTab['value4'] + xValue + languageTab['value5'], voiceLanguage);
     //console.log(field + " has value " + yValue + " at " + enteteX + " equals " + xValue);
 }
+
+// ON LOAD
+
+function OnLoadPage()
+{
+  updateLanguage('FR');
+}
+
+window.onload = OnLoadPage();

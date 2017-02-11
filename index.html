@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>CSV Dataset Reader</title>
+  <title>CSV Dataset Audio Reader</title>
   <meta charset="utf-8" />
   <meta name="description" content="website description" />
   <meta name="keywords" content="website keywords, website keywords" />
@@ -16,8 +16,9 @@
       <div id="logo">
         <div id="logo_text">
           <!-- class="logo_colour", allows you to change the colour of the text -->
-          <h1><a href="index.html">CSV Dataset<span class="logo_colour"> Reader</span></a></h1>
-          <h2>Hear your data.</h2>
+          <h1><a href="index.html">CSV Dataset<span class="logo_colour">Audio Reader</span></a></h1>
+          <h2 class="EN">Hear your data.</h2>
+          <h2 class="FR">Écoutez vos données.</h2>
         </div>
       </div>
       <div id="menubar">
@@ -35,6 +36,12 @@
       <div id="banner"></div>
     -->
     <div id="sidebar_container">
+    <h2 class="EN">Language<h2>
+    <h2 class="FR">Langage<h2>
+    <select id="languageSelector">
+      <option value="FR" selected>Français</option>
+      <option value="EN">English</option>
+    </select>
   <!--<div class="sidebar">
         <div class="sidebar_top"></div>
         <div class="sidebar_item">
@@ -64,7 +71,8 @@
     </div>
     <div id="content">
 
-      <h1>Dataset Audio</h1>
+      <h1 class="EN">Audio dataset</h1>
+      <h1 class="FR">Ensemble de données audio</h1>
       <div style="text-align:left;">
        <input type="file" id="csv-file" name="files" /><br>
        <!--<button id="launch" playing="false">Launch</button>-->
@@ -81,13 +89,14 @@
       </div>
       -->
 
-      <h2>Display</h2>
+      <h2><span class="EN">Display</span><span class="FR">Affichage</span></h2>
       <canvas id="canvas" width="640" height="360">
-        <p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p>
+        <p class="EN">Sorry, your browser doesn't support Canvas. Please update</p>
+        <p class="FR">Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p>
       </canvas>
       <div id="coord"></div>
     </div>
-    <div id="ShortcutsEN">
+    <div class="EN" id="ShortcutsEN">
       <h2>Shortcuts</h2>
       <ul id = "shortcutsListEN">
         <li>Escape to interrupt the current speech</li>
@@ -100,7 +109,7 @@
         <li>M to mute or unmute the beeping</li>
       </ul>
     </div>
-    <div id="ShortcutsFR" style="display:none;">
+    <div class="FR" id="ShortcutsFR">
       <h2>Raccourcis</h2>
       <ul id = "shortcutsListFR">
         <li>Échap pour interrompre la voix en cours</li>
