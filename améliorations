@@ -3,5 +3,7 @@ Améliorations :
 Menu d'informations plutot qu'un bloc. 
 Baisser légerement la tonalité maximale (potentiellement option de changement de son)
 Marquer rupture entre les différentes courbes - Essayer spatialisation avec une différence entre les courbes
-Index changé par ligne
-Titre du dataset
+* Index changé par ligne
+* Titre du dataset
+
+* Pouvoir tester avec un plus gros volume de donnée.
