@@ -533,7 +533,7 @@ speak = function(text, voice) {
     var parameters = {
       onstart : voiceStartCallback,
       onend : voiceEndCallback,
-      rate : 1.5
+      rate : 1
     }
     responsiveVoice.speak(text, voice || "UK English Female", parameters);
 }
