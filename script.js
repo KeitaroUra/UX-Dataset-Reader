@@ -432,6 +432,7 @@ body.onkeydown = function(e) {
 
     if (e.keyCode == 27) // Escape
     {
+      voiceEndCallback();
       unmuteWithCommand();
       responsiveVoice.cancel();
     }
@@ -494,7 +495,7 @@ body.onkeydown = function(e) {
         
     }
 
-    if (e.keyCode == 112)
+    if (e.keyCode == 112) // F1
     {
       e.preventDefault();
       str = "Shortcuts : ";
