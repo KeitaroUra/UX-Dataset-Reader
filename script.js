@@ -1,5 +1,45 @@
+var language = '';
+var voiceLanguage = "";
 var array;
 var arrayNumFields;
+
+var languageTab = {};
+var tabFr = 
+{
+  'intro': 'Ouverture d\'un dataset de ', 
+  'intro2': ' colonnes. Appuyez sur F1 pour écouter les instructions.', 
+  'currentY': "L'axe des abscisses est définie sur ", 
+  'currentY2': '.', 
+  'valuesRange': 'Les valeurs sont comprises entre ', 
+  'valuesRange2': ' et ',
+  'valuesRange3': '.', 
+  'value': 'Le champ ', 
+  'value2': ' a une valeur de ', 
+  'value3': ' à ', 
+  'value4': ' ', 
+  'value5': '.', 
+  'index': "l'index", 
+  'shortcuts': "Raccourcis", 
+  'press': "Appuyez sur ", 
+};
+var tabEn = 
+{
+  'intro': 'Dataset of ', 
+  'intro2': ' rows opened. Press F1 for instructions.',
+  'currentY': 'Currently reviewing ',
+  'currentY2': ' on the Y axis.',
+  'valuesRange': 'Values range from ', 
+  'valuesRange2': ' to ', 
+  'valuesRange3': '.', 
+  'value': 'The field ', 
+  'value2': ' has a value of ',
+  'value3': ' at ',
+  'value4': ' ',
+  'value5': '.',
+  'index': "index", 
+  'shortcuts': "Shortcuts", 
+  'press': "Press ", 
+};
 
 // Sound API
 
@@ -69,6 +109,25 @@ var circleRadius = 4;
 var yFactor;
 var xFactor;
 var intervalTimer;
+
+function updateLanguageTab(sLanguage)
+{
+  language = sLanguage;
+  if (language == 'FR')
+  {
+    languageTab = tabFr;
+    voiceLanguage = "French Female";
+  }
+  else
+  {
+    languageTab = tabEn;
+    voiceLanguage = "UK English Female";
+  }
+  console.log("Language updated");
+  console.log(languageTab);
+}
+
+updateLanguageTab('FR');
 
 function isInt(n)
 {
@@ -354,7 +413,7 @@ function handleFileSelect(evt)
         launchSound();
         updateValue();
         updateFieldList(arrayNumFields);
-        speak("Dataset of " + maxIndex + " rows opened. Press F1 for instructions.")
+        speak(languageTab['intro'] + maxIndex + languageTab['intro2'] + " " + languageTab['currentY'] + field + languageTab['currentY2']);
       }
     });
   }
@@ -453,7 +512,7 @@ body.onkeydown = function(e) {
       {
         fieldIndex = fieldIndex - 1;
         getArrayProperties();
-        speak("Now going through " + field + ".");
+        speak(languageTab['currentY'] + field + languageTab['currentY2']);
         updateValue();
       }
     }
@@ -466,7 +525,7 @@ body.onkeydown = function(e) {
       {
         fieldIndex = fieldIndex + 1;
         getArrayProperties();
-        speak("Now going through " + field + ".");
+        speak(languageTab['currentY'] + field + languageTab['currentY2']);
         updateValue();
       }
     }
@@ -474,7 +533,15 @@ body.onkeydown = function(e) {
     if (e.keyCode == 73) // i
     {
       e.preventDefault();
-      speak("Values range from " + minValue + " to " + maxValue + ".");
+      speak(languageTab['valuesRange'] + minValue + languageTab['valuesRange2'] + maxValue + languageTab['valuesRange3']);
+    }
+
+    if (e.keyCode == 76) // l
+    {
+      if (language == 'FR')
+       updateLanguageTab('EN');
+     else
+       updateLanguageTab('FR');
     }
 
     if (e.keyCode == 77) // m
@@ -491,20 +558,20 @@ body.onkeydown = function(e) {
     {
       unmuteWithCommand();
       e.preventDefault();
-      speakValue("index", index, array.data[index][field]);
+      speakValue(languageTab['index'], index, array.data[index][field]);
         
     }
 
     if (e.keyCode == 112) // F1
     {
       e.preventDefault();
-      str = "Shortcuts : ";
-      var ul = document.getElementById('shortcutsList');
+      str = languageTab['shortcuts'] + " : ";
+      var ul = document.getElementById('shortcutsList' + language);
       var list = ul.getElementsByTagName("li");
 
       for (var i = 0, length = list.length; i < length; i++)
       {
-        str = str + "Press " + list[i].innerHTML + ". ";
+        str = str + languageTab['press'] + list[i].innerHTML + ". ";
       }
       speak(str);
     }
@@ -536,11 +603,11 @@ speak = function(text, voice) {
       onend : voiceEndCallback,
       rate : 1
     }
-    responsiveVoice.speak(text, voice || "UK English Female", parameters);
+    responsiveVoice.speak(text, voiceLanguage, parameters);
 }
 
 speakValue = function(enteteX, xValue, yValue)
 {
-    speak(field + " has value " + yValue + " at " + enteteX + " " + xValue + ".", "UK English Female");
+    speak(languageTab['value'] + field + languageTab['value2'] + yValue + languageTab['value3'] + enteteX + languageTab['value4'] + xValue + languageTab['value5'], voiceLanguage);
     //console.log(field + " has value " + yValue + " at " + enteteX + " equals " + xValue);
 }

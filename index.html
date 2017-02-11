@@ -3,6 +3,7 @@
 
 <head>
   <title>CSV Dataset Reader</title>
+  <meta charset="utf-8" />
   <meta name="description" content="website description" />
   <meta name="keywords" content="website keywords, website keywords" />
   <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
@@ -86,19 +87,32 @@
       </canvas>
       <div id="coord"></div>
     </div>
-      <div id="Shortcuts">
-    <h2>Shortcuts</h2>
-    <ul id = "shortcutsList">
-      <li>Space to play or pause the automatic data browsing</li>
-      <li>Backspace to reset the index to 0</li>
-      <li>Left and Right to Navigate the X axis</li>
-      <li>Up and Down to change de Y axis field</li>
-      <li>M to mute or unmute the beeping</li>
-      <li>P to hear the data at the current position</li>
-      <li>I to hear the minimum and maximum values</li>
-      <li>Escape to interrupt the current speech</li>
-    </ul>
-  </div>
+    <div id="ShortcutsEN">
+      <h2>Shortcuts</h2>
+      <ul id = "shortcutsListEN">
+        <li>Escape to interrupt the current speech</li>
+        <li>Space to play or pause the automatic data browsing</li>
+        <li>Backspace to reset the index to 0</li>
+        <li>Left and Right to Navigate the X axis</li>
+        <li>Up and Down to change de Y axis field</li>
+        <li>P to hear the values at the current position</li>
+        <li>I to hear the minimum and maximum values on the Y axis</li>
+        <li>M to mute or unmute the beeping</li>
+      </ul>
+    </div>
+    <div id="ShortcutsFR" style="display:none;">
+      <h2>Raccourcis</h2>
+      <ul id = "shortcutsListFR">
+        <li>Échap pour interrompre la voix en cours</li>
+        <li>Espace pour lancer ou arrêter la navigation automatique des données</li>
+        <li>Retour arrière pour remettre l'index à 0</li>
+        <li>Gauche et Droite pour naviguer sur l'axe des abscisses</li>
+        <li>Haut et bas pour changer le champ utilisé sur l'axe des ordonnées</li>
+        <li>P pour écouter les valeurs à la position actuelle</li>
+        <li>I pour écouter les valeurs minimales et maximales sur l'axe des ordonnées</li>
+        <li>M pour rendre le bip muet ou non</li>
+      </ul>
+    </div>
   </div>
 </div>
 <div id="content_footer"></div>
@@ -111,7 +125,7 @@
 <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
 <script src="./papaparse.min.js"></script>
 <script src="./jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="script.js" charset="utf-8"></script>
 
 </body>
 </html>
