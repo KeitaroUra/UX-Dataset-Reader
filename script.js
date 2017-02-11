@@ -1,16 +1,18 @@
 var language = '';
 var voiceLanguage = "";
+var filename;
 var array;
 var arrayNumFields;
 
 var languageTab = {};
 var tabFr = 
 {
-  'intro': 'Ouverture d\'un dataset de ', 
-  'intro2': ' colonnes. Appuyez sur F1 pour écouter les instructions.', 
-  'currentY': "L'axe des ordonnées est définie sur ", 
+  'intro': "Ouverture de l'ensemble de données nommé ", 
+  'intro2': ' contenant ', 
+  'intro3': ' lignes. Appuyez sur F1 pour écouter les raccourcis pour chaque catégorie.', 
+  'currentY': "L'axe des ordonnées actuel est définie sur : ", 
   'currentY2': '.', 
-  'valuesRange': 'Les valeurs sont comprises entre ', 
+  'valuesRange': "Les valeurs sur l'axe des ordonnées sont comprises entre ", 
   'valuesRange2': ' et ',
   'valuesRange3': '.', 
   'value': 'Le champ ', 
@@ -18,17 +20,30 @@ var tabFr =
   'value3': ' à ', 
   'value4': ' ', 
   'value5': '.', 
-  'index': "l'index", 
+  'index': "la ligne", 
   'shortcuts': "Raccourcis", 
   'press': "Appuyez sur ", 
+  'dot': " point ", 
+  'divided_by': " divisé par ", 
+  'shortcutsSub': " pour les raccourcis ", 
+  'shortcutsSub2': "", 
+  'linesCount': "Le fichier ", 
+  'linesCount2': " contient ", 
+  'linesCount3': " lignes et ", 
+  'linesCount4': " colonnes.", 
+  'globaInformation': "Le bip décrit votre position dans l'ensemble de données. Son panoramique correspond à la ligne sur laquelle vous vous trouvez : La gauche correspond à la première ligne, la droite correspond à la dernière ligne. Sa hauteur correspond à la valeur actuelle de la ligne : Plu la note est haute, plu la valeur est elevée.",
+  'navigation': "de navigation", 
+  'infos': "de lecture de données", 
+  'other': "généraux", 
 };
 var tabEn = 
 {
-  'intro': 'Dataset of ', 
-  'intro2': ' rows opened. Press F1 for instructions.',
-  'currentY': 'Currently reviewing ',
-  'currentY2': ' on the Y axis.',
-  'valuesRange': 'Values range from ', 
+  'intro': 'Dataset ', 
+  'intro2': ' opened, it contains ',
+  'intro2': ' rows. Press F1 to hear the shortcuts of each category.',
+  'currentY': 'Currently reviewing: ',
+  'currentY2': ', on the Y axis.',
+  'valuesRange': 'Values on the Y axis range from ', 
   'valuesRange2': ' to ', 
   'valuesRange3': '.', 
   'value': 'The field ', 
@@ -36,10 +51,28 @@ var tabEn =
   'value3': ' at ',
   'value4': ' ',
   'value5': '.',
-  'index': "index", 
+  'index': "line", 
   'shortcuts': "Shortcuts", 
   'press': "Press ", 
+  'dot': " dot ", 
+  'divided_by': "divided by", 
+  'shortcutsSub': " get the ", 
+  'shortcutsSub2': " shortcuts.", 
+  'linesCount': "The file ", 
+  'linesCount2': " contains ", 
+  'linesCount3': " rows and ", 
+  'linesCount4': " columns.", 
+  'globaInformation': "The beeping sound describes your position in the dataset. Its panning corresponds to the row you're currently at : left is the first row, right is the last row. Its pitch corresponds to the current value : the higher the pitch, the higher the value.",
+  'navigation': "navigation", 
+  'infos': "data reading", 
+  'other': "global", 
 };
+
+var menus = [
+  "navigation",
+  "infos",
+  "other"
+];
 
 // Sound API
 
@@ -55,7 +88,7 @@ var panner = audioCtx.createPanner();
 panner.panningModel = 'equalpower';
 
 var minimumNote = -21;
-var maximumNote = 27;
+var maximumNote = 22;
 var differenceNote = maximumNote - minimumNote;
 
 // connect oscillator to gain node to speakers
@@ -80,8 +113,6 @@ oscillator.onended = function()
 {
   console.log('Your tone has now stopped playing!');
 }
-
-gainNode.gain.value = initialVol * volumeFactor;
 
 // test canvas
 
@@ -136,6 +167,7 @@ languageSelector.onchange = function()
   updateLanguage(languageSelector.options[languageSelector.selectedIndex].value);
 }
 
+gainNode.gain.value = 0;
 
 
 function isInt(n)
@@ -254,9 +286,9 @@ function updatePage()
 {
     value = array.data[index][field];
     if (soundPlaying == true)
-      coord.innerHTML = 'index = ' + index + '/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = " + value + "/" + maxValue + " (minimum = " + minValue + ")";
+      coord.innerHTML = 'line = ' + index + '/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = " + value + "/" + maxValue + " (minimum = " + minValue + ")";
     else
-      coord.innerHTML = 'index = NA/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = NA/" + maxValue + "(minimum = " + minValue + ")";
+      coord.innerHTML = 'line = NA/' + maxIndex + ', field = ' + field + ' (' + fieldIndex + ')' + ", value = NA/" + maxValue + "(minimum = " + minValue + ")";
 
     // Update canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -324,8 +356,8 @@ mute = function()
 
 unmute = function()
 {
-  gainNode.gain.value = initialVol * volumeFactor;
   muted = false;
+  updateVolume();
 }
 
 updateVolume = function()
@@ -394,6 +426,7 @@ var coord = document.getElementById('coord');
 function handleFileSelect(evt)
 {
   var file = evt.target.files[0];
+  console.log(file);
 
   if (file != null)
   {
@@ -405,6 +438,7 @@ function handleFileSelect(evt)
       complete: function(results)
       {
         array = results;
+        filename = file.name;
         console.log(array);
         //launch.disabled = false;
         fieldIndex = 0;
@@ -422,7 +456,8 @@ function handleFileSelect(evt)
         launchSound();
         updateValue();
         updateFieldList(arrayNumFields);
-        speak(languageTab['intro'] + maxIndex + languageTab['intro2'] + " " + languageTab['currentY'] + field + languageTab['currentY2']);
+        var name = filename.replaceAll(".", languageTab['dot']);
+        speak(languageTab['intro'] + name + languageTab['intro2'] + maxIndex + languageTab['intro3'] + " " + languageTab['currentY'] + field + languageTab['currentY2']);
       }
     });
   }
@@ -539,10 +574,17 @@ body.onkeydown = function(e) {
       }
     }
 
-    if (e.keyCode == 73) // i
+    if (e.keyCode == 82) // r
     {
       e.preventDefault();
       speak(languageTab['valuesRange'] + minValue + languageTab['valuesRange2'] + maxValue + languageTab['valuesRange3']);
+    }
+
+    if (e.keyCode == 73) // i
+    {
+      e.preventDefault();
+      speak(languageTab['globaInformation']);
+      
     }
 
     if (e.keyCode == 77) // m
@@ -555,26 +597,52 @@ body.onkeydown = function(e) {
       unmuteWithCommand();
     }
 
+    if (e.keyCode == 67) // c
+    {
+      e.preventDefault();
+      unmuteWithCommand();
+
+      var name = filename.replaceAll(".", languageTab['dot']);
+      speak(languageTab['linesCount'] + name + languageTab['linesCount2'] + maxIndex + languageTab['linesCount3'] + array.meta.fields.length + languageTab['linesCount4']);
+    }
+
     if (e.keyCode == 80) // p
     {
       unmuteWithCommand();
       e.preventDefault();
-      speakValue(languageTab['index'], index, array.data[index][field]);
-        
+      speakValue(languageTab['index'].replaceAll("/", languageTab['divided_by']), index, array.data[index][field]);
     }
 
     if (e.keyCode == 112) // F1
     {
+      unmuteWithCommand();
       e.preventDefault();
-      str = languageTab['shortcuts'] + " : ";
-      var ul = document.getElementById('shortcutsList' + language);
-      var list = ul.getElementsByTagName("li");
-
-      for (var i = 0, length = list.length; i < length; i++)
+      var str = languageTab['shortcuts'] + " : ";
+      
+      for (var i = 0, length = menus.length; i < length; i++)
       {
-        str = str + languageTab['press'] + list[i].innerHTML + ". ";
+        str = str + languageTab['press'] + "F" + (i + 2) + languageTab['shortcutsSub'] + languageTab[menus[i]] + languageTab['shortcutsSub2'] +  ". ";
       }
+
       speak(str);
+    }
+
+    for (var i = 0; i < menus.length; i++)
+    {
+      if (e.keyCode == (113 + i)) // F2 F3 F4
+      {
+        unmuteWithCommand();
+        e.preventDefault();
+        var str = languageTab['shortcuts'] + " " + languageTab[menus[i]] + " : ";
+        var ul = document.getElementById('shortcutsList' + (i + 1) + language);
+
+        var list = ul.getElementsByTagName("li");
+        for (var i = 0, length = list.length; i < length; i++)
+        {
+          str = str + languageTab['press'] + list[i].innerHTML + ". ";
+        }
+        speak(str);
+      }
     }
   }
 
@@ -606,7 +674,6 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 
 speak = function(text, voice) {
-    text = text.replaceAll("/", "divided by");
     var parameters = {
       onstart : voiceStartCallback,
       onend : voiceEndCallback,
