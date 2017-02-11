@@ -8,7 +8,7 @@ var tabFr =
 {
   'intro': 'Ouverture d\'un dataset de ', 
   'intro2': ' colonnes. Appuyez sur F1 pour écouter les instructions.', 
-  'currentY': "L'axe des abscisses est définie sur ", 
+  'currentY': "L'axe des ordonnées est définie sur ", 
   'currentY2': '.', 
   'valuesRange': 'Les valeurs sont comprises entre ', 
   'valuesRange2': ' et ',
