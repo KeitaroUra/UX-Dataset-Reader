@@ -27,5 +27,77 @@ Oui si améliorations
 
 Les abcisses et ordonnées ne sont pas données au chargement
 
+====================================================================================================================
+
+QUESTIONNAIRE SATISFACTION :
+
+- Diriez vous que vous etes satisfait de votre expérience avec CSV data reader ?
+
+Plutot satsfait 
+
+- Qu'avez vous pensé de la prise en main de notre outil ?
+
+Un peu bordélique le temps de comprendre que M fonctionne.
+Compris que c'est un tableau dans lequel on peut se déplacer.
+Bonne compréhension du systeme de son et d'ordonnées
+
+- Quels sont les points que vous avez apprecié lors du test effectué ?
+
+Ca marche bien, fait le taff.
+
+- Quels sont les points à améliorer de manière à rendre votre expérience plus agréable ?
+
+Varier instruments
+Son par défaut pas extra, orgue  ?
+Son en arriere plan dérangeant si pause et user pas habitué
+Bip pendant les instructions
+
+- Recommanderiez vous notre outil à des personnes qui souhaitent exploiter des données CSV ? Si non, pourquoi ?
+
+Oui
+
+- Remarques diverse ?
+
+================================================================================================================
+
+QUESTIONNAIRE SATISFACTION :
+
+- Diriez vous que vous etes satisfait de votre expérience avec CSV data reader ?
 
 
+Globalement, content de la maniere de naviguer 
+son continu
+
+- Qu'avez vous pensé de la prise en main de notre outil ?
+
+Globalement satisf, manque d'infos sur la colonne
+
+
+- Quels sont les points que vous avez apprecié lors du test effectué ?
+
+Droit au but
+Manipulation de données direct
+Tonalité claire
+Plus de volume de données pour pouvoir tester.
+
+- Quels sont les points à améliorer de manière à rendre votre expérience plus agréable ?
+
+Pas de titre sur le dataset
+BEaucoup de commande (Contextualiser) plus d'infos par exemple
+Pas assez d'infos sur le range de navigation
+
+- Recommanderiez vous notre outil à des personnes qui souhaitent exploiter des données CSV ? Si non, pourquoi ?
+
+Oui pour se faire une premiere idée.
+
+- Remarques diverse ?
+
+Potenitllement ajouter la spatialisation en "hauteur"
+Spatialisation ok
+
+Autimatic nav pour l'amplitude (utile) ainsi que min max.
+Bonne visualisation des courbes
+Bonne prise en main des raccourcis
+Les bruits sont "incroyables"
+
+Coupure plus franche entre les changements 
