@@ -1,23 +1,31 @@
 QUESTIONNAIRE SATISFACTION :
 
-Diriez vous que vous etes satisfait de votre expérience avec CSV data reader ?
+- Diriez vous que vous etes satisfait de votre expérience avec CSV data reader ?
+
+Pas assez clair (anglais), relativement intuitif 
+
+- Qu'avez vous pensé de la prise en main de notre outil ?
+
+Instructions trop rapides.
+Monter et descendre n'est pas assez clair.
+Mieux si moins de points sur le graph
+
+- Quels sont les points que vous avez apprecié lors du test effectué ?
+
+Les sons sur la note 
+
+- Quels sont les points à améliorer de manière à rendre votre expérience plus agréable ?
+
+Francais
+Plus intuitif meme pour les enfants, moins technique 
+
+- Recommanderiez vous notre outil à des personnes qui souhaitent exploiter des données CSV ? Si non, pourquoi ?
+
+Oui si améliorations
+
+- Remarques diverse ?
+
+Les abcisses et ordonnées ne sont pas données au chargement
 
 
 
-Qu'avez vous pensé de la prise en main de notre outil ?
-
-
-
-Quels sont les points que vous avez apprecié lors du test effectué ?
-
-
-
-Quels sont les points à améliorer de manière à rendre votre expérience plus agréable ?
-
-
-
-Recommanderiez vous notre outil à des personnes qui souhaitent exploiter des données CSV ? Si non, pourquoi ?
-
-
-
-Remarques diverse ?
