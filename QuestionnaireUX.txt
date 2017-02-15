@@ -101,3 +101,32 @@ Bonne prise en main des raccourcis
 Les bruits sont "incroyables"
 
 Coupure plus franche entre les changements 
+
+================================================================================================================
+
+QUESTIONNAIRE SATISFACTION :
+
+- Diriez vous que vous etes satisfait de votre expérience avec CSV data reader ?
+
+Bof
+
+- Qu'avez vous pensé de la prise en main de notre outil ?
+
+Compliqué, trop d'informations a retenir.
+
+- Quels sont les points que vous avez apprecié lors du test effectué ?
+
+Les sons bien différents dans la fréquence. Pas possible de se tromper.
+
+- Quels sont les points à améliorer de manière à rendre votre expérience plus agréable ?
+
+Il serait mieux que les raccourcis s'adaptent a la langue (La premiere lettre du nom de la fonctionnalité).
+Les termes pour les raccourcis ne sont pas assez explicites.
+Le défilement du son est trop rapide, on a pas le temps de bien se rendre compte.
+
+- Recommanderiez vous notre outil à des personnes qui souhaitent exploiter des données CSV ? Si non, pourquoi ?
+
+Oui
+
+- Remarques diverse ?
+
